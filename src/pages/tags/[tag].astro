@@ -1,0 +1,12 @@
+---
+import { AppRoute } from "@components/react/ui/AppRoute";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+	return [{ params: { tag: "_" } }];
+}
+---
+
+<BaseLayout title="Tag" noindex>
+	<AppRoute client:only="react" />
+</BaseLayout>

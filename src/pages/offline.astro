@@ -1,0 +1,14 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Offline" noindex>
+	<div class="bg-grain grid min-h-screen place-items-center px-6">
+		<div class="max-w-md text-center">
+			<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">No connection</p>
+			<h1 class="mt-2 font-display text-4xl">You're offline</h1>
+			<p class="mt-2 text-fg-muted">Journal works offline. Any new entries will sync when you reconnect.</p>
+			<a href="/dashboard" class="mt-6 inline-flex text-sm text-accent">Open dashboard</a>
+		</div>
+	</div>
+</BaseLayout>

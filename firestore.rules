@@ -1,0 +1,99 @@
+rules_version = '2';
+
+service cloud.firestore {
+	match /databases/{database}/documents {
+
+		function isSignedIn() {
+			return request.auth != null;
+		}
+
+		function isOwner(uid) {
+			return isSignedIn() && request.auth.uid == uid;
+		}
+
+		function hasOnlyAllowedFields(fields) {
+			return request.resource.data.keys().hasOnly(fields);
+		}
+
+		// Public user profile (only self-readable/writable)
+		match /users/{uid} {
+			allow read, write: if isOwner(uid)
+				&& hasOnlyAllowedFields([
+					'email', 'displayName', 'photoURL', 'isAnonymous',
+					'createdAt', 'defaultJournalType', 'timezone', 'updatedAt'
+				]);
+		}
+
+		// User's entries
+		match /users/{uid}/entries/{entryId} {
+			allow read: if isOwner(uid);
+			allow create: if isOwner(uid)
+				&& hasOnlyAllowedFields([
+					'title', 'content', 'mood', 'moodIntensity', 'tags',
+					'location', 'weather', 'journalType', 'entryDate',
+					'createdAt', 'updatedAt', 'favorite', 'pinned',
+					'wordCount', 'readingTime', 'isDraft'
+				])
+				&& request.resource.data.title is string
+				&& request.resource.data.content is string
+				&& request.resource.data.entryDate is string;
+			allow update: if isOwner(uid)
+				&& hasOnlyAllowedFields([
+					'title', 'content', 'mood', 'moodIntensity', 'tags',
+					'location', 'weather', 'journalType', 'entryDate',
+					'createdAt', 'updatedAt', 'favorite', 'pinned',
+					'wordCount', 'readingTime', 'isDraft'
+				]);
+			allow delete: if isOwner(uid);
+		}
+
+		// Templates
+		match /users/{uid}/templates/{templateId} {
+			allow read, write: if isOwner(uid)
+				&& hasOnlyAllowedFields([
+					'name', 'description', 'content', 'isBuiltIn', 'journalType',
+					'createdAt', 'updatedAt'
+				]);
+		}
+
+		// Tags
+		match /users/{uid}/tags/{tagId} {
+			allow read, write: if isOwner(uid)
+				&& hasOnlyAllowedFields(['name', 'color', 'count', 'createdAt']);
+		}
+
+		// Goals
+		match /users/{uid}/goals/{goalId} {
+			allow read, write: if isOwner(uid)
+				&& hasOnlyAllowedFields([
+					'title', 'description', 'type', 'target', 'period',
+					'startDate', 'endDate', 'isArchived', 'createdAt', 'updatedAt'
+				]);
+		}
+
+		// Settings (single doc per user)
+		match /users/{uid}/settings/{settingsId} {
+			allow read, write: if isOwner(uid)
+				&& hasOnlyAllowedFields([
+					'theme', 'font', 'accentColor', 'defaultJournalType',
+					'defaultMood', 'weekStart', 'notifications', 'privacy',
+					'updatedAt'
+				]);
+		}
+
+		// Cached counters
+		match /users/{uid}/counters/{counterId} {
+			allow read, write: if isOwner(uid);
+		}
+
+		// Per-year rollups
+		match /users/{uid}/counters/yearly/{year} {
+			allow read, write: if isOwner(uid);
+		}
+
+		// Default deny
+		match /{document=**} {
+			allow read, write: if false;
+		}
+	}
+}

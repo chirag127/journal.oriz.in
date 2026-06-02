@@ -1,0 +1,22 @@
+{
+	"extends": "astro/tsconfigs/strict",
+	"include": [".astro/types.d.ts", "**/*"],
+	"exclude": ["dist", "node_modules"],
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"jsxImportSource": "react",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@components/*": ["./src/components/*"],
+			"@lib/*": ["./src/lib/*"],
+			"@layouts/*": ["./src/layouts/*"],
+			"@stores/*": ["./src/stores/*"],
+			"@styles/*": ["./src/styles/*"],
+			"@types/*": ["./src/types/*"],
+			"@hooks/*": ["./src/lib/hooks/*"]
+		},
+		"verbatimModuleSyntax": false,
+		"allowImportingTsExtensions": false
+	}
+}
