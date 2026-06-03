@@ -1,6 +1,6 @@
 name: CI
 
-"on":
+on:
   push:
     branches: [main]
   pull_request:
@@ -56,6 +56,9 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      - name: Enable pnpm build scripts
+        run: pnpm config set ignore-scripts false
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -67,6 +70,7 @@ jobs:
           PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.PUBLIC_FIREBASE_STORAGE_BUCKET }}
           PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
           PUBLIC_FIREBASE_APP_ID: ${{ secrets.PUBLIC_FIREBASE_APP_ID }}
+          PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.PUBLIC_FIREBASE_MEASUREMENT_ID }}
         run: pnpm build
 
       - name: Upload build artifact
@@ -93,6 +97,9 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
+      - name: Enable pnpm build scripts
+        run: pnpm config set ignore-scripts false
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
