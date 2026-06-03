@@ -8,7 +8,7 @@ export default defineConfig({
 	workers: process.env.CI ? 1 : undefined,
 	reporter: process.env.CI ? "github" : "list",
 	use: {
-		baseURL: "http://localhost:4321",
+		baseURL: "http://127.0.0.1:4329",
 		trace: "on-first-retry",
 	},
 	projects: [
@@ -16,8 +16,8 @@ export default defineConfig({
 		{ name: "mobile-safari", use: { ...devices["iPhone 14"] } },
 	],
 	webServer: {
-		command: "pnpm preview --host 127.0.0.1 --port 4321",
-		url: "http://localhost:4321",
+		command: "pnpm preview --host 127.0.0.1 --port 4329",
+		url: "http://127.0.0.1:4329",
 		reuseExistingServer: !process.env.CI,
 		timeout: 120_000,
 	},
