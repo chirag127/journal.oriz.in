@@ -83,6 +83,20 @@ export function AppShell({
 		setOpen(false);
 	}, [location]);
 
+	useEffect(() => {
+		if (!open) return;
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key === "Escape") setOpen(false);
+		};
+		document.addEventListener("keydown", onKey);
+		const prevOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+		return () => {
+			document.removeEventListener("keydown", onKey);
+			document.body.style.overflow = prevOverflow;
+		};
+	}, [open]);
+
 	async function onSignOut() {
 		try {
 			await signOut();
@@ -95,7 +109,7 @@ export function AppShell({
 	return (
 		<div className="min-h-screen bg-grain">
 			<header className="sticky top-0 z-40 border-b border-border bg-bg/80 backdrop-blur-md lg:hidden">
-				<div className="flex h-14 items-center justify-between px-4">
+				<div className="flex h-14 items-center justify-between gap-2 px-4">
 					<Link
 						href="/dashboard"
 						className="font-display text-lg font-medium tracking-tight no-underline"
@@ -107,10 +121,12 @@ export function AppShell({
 						<button
 							type="button"
 							onClick={() => setOpen((o) => !o)}
-							className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-bg-elevated"
+							className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-bg-elevated touch-target sm:h-9 sm:w-9"
 							aria-label="Toggle menu"
+							aria-expanded={open}
+							aria-controls="app-drawer"
 						>
-							{open ? <X size={16} /> : <Menu size={16} />}
+							{open ? <X size={18} /> : <Menu size={18} />}
 						</button>
 					</div>
 				</div>
@@ -118,7 +134,8 @@ export function AppShell({
 
 			<div className="flex">
 				<aside
-					className={`fixed inset-y-0 left-0 z-30 w-72 transform border-r border-border bg-bg transition-transform duration-300 ease-out-quart lg:static lg:translate-x-0 ${
+					id="app-drawer"
+					className={`fixed inset-y-0 left-0 z-30 w-72 max-w-[85vw] transform border-r border-border bg-bg transition-transform duration-300 ease-out-quart lg:static lg:translate-x-0 ${
 						open ? "translate-x-0" : "-translate-x-full"
 					}`}
 				>
@@ -135,7 +152,7 @@ export function AppShell({
 				)}
 
 				<main
-					className={`min-h-screen flex-1 ${wide ? "px-0" : "px-4 py-6 sm:px-6 lg:px-10 lg:py-8"}`}
+					className={`min-h-screen flex-1 pb-safe ${wide ? "px-0" : "px-4 py-6 sm:px-6 lg:px-10 lg:py-8"}`}
 				>
 					{children}
 				</main>

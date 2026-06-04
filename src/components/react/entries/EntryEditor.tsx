@@ -268,15 +268,15 @@ export function EntryEditor({ id, initialDate, initialTemplate }: EntryEditorPro
 
 	return (
 		<div className="space-y-5">
-			<header className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
-				<div className="flex items-center gap-3">
+			<header className="flex flex-wrap items-center justify-between gap-y-3 gap-x-3 border-b border-border pb-4">
+				<div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
 					<button
 						type="button"
 						onClick={() => setShowTypePicker(true)}
-						className="inline-flex items-center gap-2 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm hover:border-fg-muted"
+						className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-bg-elevated px-3 py-1.5 text-sm hover:border-fg-muted"
 					>
 						<FileText size={14} className="text-fg-muted" />
-						<span>{typeData?.label ?? "Journal"}</span>
+						<span className="truncate">{typeData?.label ?? "Journal"}</span>
 					</button>
 					<SavedBadge status={status} lastSavedAt={lastSavedAt} />
 				</div>
@@ -337,7 +337,7 @@ export function EntryEditor({ id, initialDate, initialTemplate }: EntryEditorPro
 				value={title}
 				onChange={(e) => setTitle(e.target.value)}
 				placeholder="A title for your day…"
-				className="w-full border-0 bg-transparent font-display text-4xl leading-tight tracking-tight outline-none placeholder:text-fg-subtle"
+				className="w-full border-0 bg-transparent font-display text-3xl leading-tight tracking-tight outline-none placeholder:text-fg-subtle sm:text-4xl"
 			/>
 
 			<MarkdownEditor
@@ -518,7 +518,7 @@ function IconToggle({
 			onClick={onClick}
 			aria-label={label}
 			aria-pressed={on}
-			className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-border transition-colors ${
+			className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border transition-colors sm:h-9 sm:w-9 ${
 				on ? "bg-accent/15 text-accent" : "bg-bg-elevated text-fg-muted hover:text-fg"
 			}`}
 		>

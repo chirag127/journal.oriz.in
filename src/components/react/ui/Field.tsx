@@ -54,7 +54,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 	return (
 		<input
 			ref={ref}
-			className={`h-10 w-full rounded-md border bg-bg-elevated px-3 text-sm text-fg placeholder:text-ink-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-accent/30 ${invalid ? "border-danger" : "border-border"} ${className}`}
+			className={`h-11 w-full rounded-md border bg-bg-elevated px-3 text-base text-fg placeholder:text-ink-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-accent/30 sm:h-10 sm:text-sm ${invalid ? "border-danger" : "border-border"} ${className}`}
 			{...rest}
 		/>
 	);
@@ -71,7 +71,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
 	return (
 		<textarea
 			ref={ref}
-			className={`min-h-24 w-full rounded-md border bg-bg-elevated px-3 py-2.5 text-sm text-fg placeholder:text-ink-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-accent/30 ${invalid ? "border-danger" : "border-border"} ${className}`}
+			className={`min-h-24 w-full rounded-md border bg-bg-elevated px-3 py-2.5 text-base text-fg placeholder:text-ink-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-accent/30 sm:text-sm ${invalid ? "border-danger" : "border-border"} ${className}`}
 			{...rest}
 		/>
 	);
@@ -88,7 +88,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
 	return (
 		<select
 			ref={ref}
-			className={`h-10 w-full rounded-md border bg-bg-elevated px-3 pr-8 text-sm text-fg transition-colors focus:outline-none focus:ring-2 focus:ring-accent/30 appearance-none bg-no-repeat bg-[length:14px] bg-[position:right_0.6rem_center] ${invalid ? "border-danger" : "border-border"} ${className}`}
+			className={`h-11 w-full rounded-md border bg-bg-elevated px-3 pr-8 text-base text-fg transition-colors focus:outline-none focus:ring-2 focus:ring-accent/30 appearance-none bg-no-repeat bg-[length:14px] bg-[position:right_0.6rem_center] sm:h-10 sm:text-sm ${invalid ? "border-danger" : "border-border"} ${className}`}
 			style={{
 				backgroundImage:
 					"url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b6256' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>\")",

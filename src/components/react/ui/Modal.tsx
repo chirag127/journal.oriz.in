@@ -57,19 +57,21 @@ export function Modal({
 			}}
 		>
 			<div
-				className={`w-[92vw] ${sizeMap[size]} rounded-xl border border-border bg-bg-elevated p-6 shadow-xl animate-reveal`}
+				className={`w-[92vw] ${sizeMap[size]} max-h-[90vh] overflow-y-auto rounded-xl border border-border bg-bg-elevated p-5 shadow-xl animate-reveal sm:p-6`}
 			>
 				{(title || !hideClose) && (
-					<div className="mb-4 flex items-start justify-between gap-4">
-						<div>
-							{title && <h2 className="font-display text-2xl tracking-tight">{title}</h2>}
+					<div className="mb-4 flex items-start justify-between gap-3">
+						<div className="min-w-0 flex-1">
+							{title && (
+								<h2 className="font-display text-xl tracking-tight sm:text-2xl">{title}</h2>
+							)}
 							{description && <p className="mt-1 text-sm text-fg-muted">{description}</p>}
 						</div>
 						{!hideClose && (
 							<button
 								type="button"
 								onClick={onClose}
-								className="-m-1 rounded-md p-1 text-fg-muted hover:bg-paper-sunken"
+								className="-mr-2 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-fg-muted hover:bg-paper-sunken sm:h-9 sm:w-9"
 								aria-label="Close"
 							>
 								<X size={18} />

@@ -8,10 +8,10 @@ const baseClasses =
 	"inline-flex items-center justify-center gap-2 font-medium transition-all duration-150 ease-out-quart select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg focus-visible:ring-accent disabled:opacity-50 disabled:cursor-not-allowed";
 
 const sizeClasses: Record<Size, string> = {
-	sm: "h-8 px-3 text-sm rounded-md",
+	sm: "h-9 px-3 text-sm rounded-md",
 	md: "h-10 px-4 text-sm rounded-md",
 	lg: "h-12 px-6 text-base rounded-lg",
-	icon: "h-9 w-9 rounded-md",
+	icon: "h-11 w-11 rounded-md sm:h-9 sm:w-9",
 };
 
 const variantClasses: Record<Variant, string> = {

@@ -69,7 +69,7 @@ export function EntriesList({ scope = "all" }: { scope?: "favorites" | "pinned" 
 			</header>
 
 			<div className="flex flex-wrap items-center gap-2">
-				<div className="relative flex-1 min-w-60">
+				<div className="relative w-full min-w-0 flex-1 sm:w-auto sm:min-w-60">
 					<Search
 						size={14}
 						className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted"
@@ -99,7 +99,7 @@ export function EntriesList({ scope = "all" }: { scope?: "favorites" | "pinned" 
 							order: o as "asc" | "desc",
 						}));
 					}}
-					className="w-48"
+					className="w-full sm:w-48"
 				>
 					{SORTS.map((s) => (
 						<option key={s.value} value={s.value}>

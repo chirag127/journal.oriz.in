@@ -35,7 +35,7 @@ test.describe("Auth-gated routes", () => {
 	});
 
 	test("offline page exists", async ({ page }) => {
-		const res = await page.goto("/offline/");
+		const res = await page.goto("/offline");
 		expect(res?.status()).toBe(200);
 	});
 });

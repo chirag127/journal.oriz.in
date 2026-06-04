@@ -181,7 +181,7 @@ export function MarkdownEditor({
 						autoFocus={autoFocus}
 						spellCheck
 						className={cn(
-							"scrollbar-thin w-full resize-none border-0 bg-transparent p-6 font-mono text-sm leading-relaxed text-fg outline-none placeholder:text-fg-subtle",
+							"scrollbar-thin w-full resize-none border-0 bg-transparent p-4 font-mono text-base leading-relaxed text-fg outline-none placeholder:text-fg-subtle sm:p-6 sm:text-sm",
 							fullscreen ? "min-h-[calc(100vh-180px)]" : "min-h-[60vh]",
 							mode === "split" && "md:border-r md:border-border",
 						)}

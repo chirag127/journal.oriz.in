@@ -140,11 +140,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
 				<div className="h-px flex-1 bg-border" />
 			</div>
 
-			<form
-				data-astro-reload
-				onSubmit={handleSubmit(onEmailSubmit)}
-				className="space-y-4"
-			>
+			<form data-astro-reload onSubmit={handleSubmit(onEmailSubmit)} className="space-y-4">
 				{mode === "signup" && (
 					<Field label="Name" htmlFor="name" error={errors.name?.message}>
 						<Input
