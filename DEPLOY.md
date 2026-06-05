@@ -69,25 +69,57 @@ This pushes `firestore.rules` and `firestore.indexes.json`. Indexes take a few m
 
 ## 3. Custom domain — `journal.oriz.in`
 
-### 3.1 Buy / own the domain
+### 3.1 Current state
 
-Buy `oriz.in` (or just `journal.oriz.in` as a subdomain) from any registrar — Cloudflare Registrar, Namecheap, Google Domains, Porkbun, etc.
+The custom domain is already registered in Firebase Hosting (REST API call on 2026-06-05). Current status (poll `firebase hosting:sites:get` or the REST endpoint below):
 
-### 3.2 Add the custom domain in Firebase
+- `hostState: HOST_UNHOSTED` (DNS not yet pointed here)
+- `ownershipState: OWNERSHIP_MISSING` (CNAME not found)
+- `cert.state: CERT_VALIDATING` (ACME challenge pending)
 
-**Hosting → Add custom domain → `journal.oriz.in`**.
+### 3.2 Add DNS records at the registrar
 
-Firebase will show you a `TXT` record (for ownership) and an `A` record (for routing). Add both at your registrar's DNS panel:
+The domain `oriz.in` is owned by the project. Go to its DNS panel (Cloudflare / Namecheap / Google Domains / Porkbun / etc.) and add these two records:
 
-- **A** record: `@` (root) → `151.101.1.195` (or whatever Firebase shows — these IPs rotate)
-- **A** record: `@` → `151.101.65.195`
-- **TXT** record: `@` → the long verification string Firebase gives you
+| Type  | Name                              | Value                                                                                              | TTL  | Purpose                  |
+| ----- | --------------------------------- | -------------------------------------------------------------------------------------------------- | ---- | ------------------------ |
+| CNAME | `journal`                         | `oriz-journal.web.app`                                                                             | Auto | Routes `journal.oriz.in` to Firebase |
+| TXT   | `_acme-challenge.journal`         | `f_5-P-u1tIcNcHWg-PQrkDgmiwLl7F2R1oxud_SgdPw`                                                     | 60s  | SSL cert ownership (ACME) |
 
-It can take 5–60 minutes for DNS to propagate. Firebase will then issue a free Let's Encrypt certificate automatically.
+> If the registrar strips leading underscores from TXT names, set the full host `_acme-challenge.journal.oriz.in.` (some UIs require entering the FQDN with a trailing dot).
 
-### 3.3 Add the www redirect (optional)
+### 3.3 Alternative: HTTP-01 challenge
 
-If you also want `www.journal.oriz.in` to redirect to the apex, add a second custom domain in Firebase for the `www` subdomain and it will redirect automatically once you approve the cert.
+If DNS is locked or you can't add a TXT record, Firebase will fall back to HTTP-01. Add this static file to `public/`:
+
+```
+public/.well-known/acme-challenge/UQyeO_cbzi6_upghqXN9nj0pnc3MdP4xAKb4PYhUg59Kd1aT5GIf0ZNVOkTKlUq7
+```
+
+Containing the body:
+
+```
+UQyeO_cbzi6_upghqXN9nj0pnc3MdP4xAKb4PYhUg59Kd1aT5GIf0ZNVOkTKlUq7.M0-GObbb5ePi63ASQsPKBrDqfgayGnOWpyrEF0nHqug
+```
+
+…and deploy. Firebase's checkers will fetch it from `https://journal.oriz.in/.well-known/acme-challenge/...` once DNS is in place.
+
+### 3.4 Propagation & verification
+
+DNS typically takes 5–60 minutes (sometimes up to 24h on slow registrars). Firebase polls the records automatically. Watch progress with:
+
+```bash
+firebase hosting:sites:get oriz-journal --project oriz-journal
+# or via REST:
+curl -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  https://firebasehosting.googleapis.com/v1beta1/projects/165452692517/sites/oriz-journal/customDomains/journal.oriz.in
+```
+
+States move through `HOST_UNHOSTED → HOST_UNVERIFIED → HOST_CONNECTED` and the cert state moves `CERT_VALIDATING → CERT_PROVISIONING → CERT_ACTIVE`. When both are done, `https://journal.oriz.in` will serve the app with a Let's Encrypt cert.
+
+### 3.5 www redirect (optional)
+
+If you also want `www.journal.oriz.in` to redirect to the apex, add a second custom domain for the `www` subdomain — Firebase will issue a separate cert and 301-redirect once both are verified.
 
 ## 4. CI/CD with GitHub Actions
 
