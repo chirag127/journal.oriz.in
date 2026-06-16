@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.describe("PWA artifacts", () => {
 	test("favicon.svg is served and is XML", async ({ request }) => {
@@ -30,7 +30,12 @@ test.describe("PWA artifacts", () => {
 	});
 
 	test("all icon sizes resolve to PNG bytes", async ({ request }) => {
-		const sizes = ["icon-192.png", "icon-512.png", "icon-maskable-192.png", "icon-maskable-512.png"];
+		const sizes = [
+			"icon-192.png",
+			"icon-512.png",
+			"icon-maskable-192.png",
+			"icon-maskable-512.png",
+		];
 		for (const s of sizes) {
 			const res = await request.get(`/icons/${s}`);
 			expect(res.status(), `${s} should resolve`).toBe(200);
@@ -66,9 +71,7 @@ test.describe("PWA artifacts", () => {
 		await page.goto("/");
 		const manifestHref = await page.locator('link[rel="manifest"]').getAttribute("href");
 		expect(manifestHref).toBe("/manifest.webmanifest");
-		const appleHref = await page
-			.locator('link[rel="apple-touch-icon"]')
-			.getAttribute("href");
+		const appleHref = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
 		expect(appleHref).toBe("/icons/apple-touch-icon.png");
 		const icon192 = await page.locator('link[rel="icon"][sizes="192x192"]').getAttribute("href");
 		expect(icon192).toBe("/icons/icon-192.png");

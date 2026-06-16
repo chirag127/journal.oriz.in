@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.describe("Performance and SEO", () => {
 	test("landing page has meta description and og tags", async ({ page }) => {
