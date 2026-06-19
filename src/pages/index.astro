@@ -1,176 +1,176 @@
 ---
-import MarketingLayout from "@/layouts/MarketingLayout.astro";
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import { SITE_CONFIG } from '~/lib/siteConfig'
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_CONFIG.name,
+  url: SITE_CONFIG.origin,
+  description: SITE_CONFIG.description,
+  publisher: { '@type': 'Person', name: 'Chirag Singhal' },
+}
+
+const journalTypes = [
+  { emoji: '📖', label: 'Daily', desc: 'Capture your day' },
+  { emoji: '🙏', label: 'Gratitude', desc: 'What you’re thankful for' },
+  { emoji: '🎓', label: 'Learning', desc: 'Notes on what you’re learning' },
+  { emoji: '📚', label: 'Reading', desc: 'Books and articles' },
+  { emoji: '✈️', label: 'Travel', desc: 'Trips and journeys' },
+  { emoji: '💼', label: 'Work', desc: 'Career and projects' },
+  { emoji: '🏃', label: 'Fitness', desc: 'Body and movement' },
+  { emoji: '🌙', label: 'Dream', desc: 'Dreams and visions' },
+  { emoji: '🔬', label: 'Research', desc: 'Studies and inquiry' },
+  { emoji: '✨', label: 'Reflection', desc: 'Deep reflection' },
+]
 ---
 
-<MarketingLayout>
-	<section class="relative overflow-hidden">
-		<div class="container-wide px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28 lg:px-10 lg:pt-32 lg:pb-36">
-			<div class="max-w-4xl">
-				<p
-					class="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-bg-elevated/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted animate-reveal"
-				>
-					<span class="inline-block h-1.5 w-1.5 rounded-full bg-accent"></span>
-					Private · Fast · Beautiful
-				</p>
-				<h1
-					class="font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-balance sm:text-6xl lg:text-7xl animate-reveal"
-					style="animation-delay: 60ms"
-				>
-					A quiet place <br class="hidden sm:block" /> for the thoughts <br class="hidden sm:block" />
-					<span class="italic text-accent">worth keeping.</span>
-				</h1>
-				<p
-					class="mt-6 max-w-2xl text-base leading-relaxed text-fg-muted sm:text-xl animate-reveal"
-					style="animation-delay: 160ms"
-				>
-					Journal is a daily companion for writing, reflection, memory keeping, and personal
-					growth. Capture today. Revisit a year. Notice who you're becoming. Your words stay
-					yours — encrypted in transit, private by default, and fully on the free plan.
-				</p>
-				<div class="mt-10 flex flex-col gap-3 sm:flex-row animate-reveal" style="animation-delay: 240ms">
-					<a
-						href="/signup"
-						class="inline-flex h-12 items-center justify-center rounded-lg bg-ink px-6 text-base font-medium text-paper no-underline transition-colors hover:bg-ink-soft"
-					>
-						Start writing — it's free
-					</a>
-					<a
-						href="/login"
-						class="inline-flex h-12 items-center justify-center rounded-lg border border-border bg-bg-elevated px-6 text-base font-medium no-underline transition-colors hover:bg-paper-sunken"
-					>
-						I have an account
-					</a>
-				</div>
-				<p
-					class="mt-4 text-xs text-fg-muted animate-reveal"
-					style="animation-delay: 320ms"
-				>
-					Or <a href="/dashboard" class="underline decoration-border underline-offset-2 hover:decoration-accent">try as a guest</a> — no signup required.
-				</p>
-			</div>
-		</div>
-	</section>
+<BaseLayout jsonLd={jsonLd}>
+  <section class="hero">
+    <p class="eyebrow">📓 Journal · oriz family</p>
+    <h1 class="hero-h">
+      A quiet place for the thoughts <span class="hero-accent">worth keeping</span>.
+    </h1>
+    <p class="hero-lede">
+      Privacy-first journaling. Ten journal types. Offline-first PWA. Your entries
+      live in Firestore under your own user ID — nobody else can read them.
+    </p>
+    <div class="hero-cta">
+      <a href="/account/" class="btn btn-primary">Sign in to start →</a>
+      <a href="/about/" class="btn">About Journal</a>
+    </div>
+  </section>
 
-	<section class="border-t border-border/60 bg-paper-soft/40">
-		<div class="container-wide px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
-			<div class="grid grid-cols-1 gap-x-12 gap-y-16 md:grid-cols-2 lg:grid-cols-3 stagger">
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						01 — Capture
-					</p>
-					<h2 class="mt-3 font-display text-3xl tracking-tight">Write daily, friction-free.</h2>
-					<p class="mt-3 text-fg-muted">
-						A distraction-free editor with markdown, autosave, and a reading-time display. Open
-						it, write, close it. Your entry is saved the moment you stop typing.
-					</p>
-				</div>
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						02 — Reflect
-					</p>
-					<h2 class="mt-3 font-display text-3xl tracking-tight">See your life, not just your day.</h2>
-					<p class="mt-3 text-fg-muted">
-						Calendar, timeline, year heatmap, mood trends, streaks, and "On this day" memories
-						remind you who you were last year, and how far you've come.
-					</p>
-				</div>
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						03 — Own
-					</p>
-					<h2 class="mt-3 font-display text-3xl tracking-tight">Your words, your file.</h2>
-					<p class="mt-3 text-fg-muted">
-						Export your entire journal to Markdown, JSON, or plain text — at any time, in your
-						browser. No lock-in, no data hostage.
-					</p>
-				</div>
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						04 — Moods
-					</p>
-					<h2 class="mt-3 font-display text-3xl tracking-tight">Track how you feel, gently.</h2>
-					<p class="mt-3 text-fg-muted">
-						Five moods, custom emojis, mood calendar, trend lines, and longest mood streak. The
-						goal is awareness, not surveillance.
-					</p>
-				</div>
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						05 — Goals
-					</p>
-					<h2 class="mt-3 font-display text-3xl tracking-tight">Goals that move with you.</h2>
-					<p class="mt-3 text-fg-muted">
-						Daily, weekly, monthly, or yearly targets. Write 365 days. Journal your way back
-						to yourself.
-					</p>
-				</div>
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						06 — Install
-					</p>
-					<h2 class="mt-3 font-display text-3xl tracking-tight">Works offline, anywhere.</h2>
-					<p class="mt-3 text-fg-muted">
-						Install Journal to your home screen. It works on the train, on a plane, in the
-						deep of a Sunday morning. Your changes sync when you're back online.
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
+  <section class="section">
+    <h2 class="section-h">Ten ways to write</h2>
+    <p class="section-lede">
+      Pick a journal type — or use them all. Each entry tags itself with mood,
+      location, weather, and free-form tags.
+    </p>
+    <ul class="type-grid">
+      {journalTypes.map((t) => (
+        <li class="type-card">
+          <span class="type-emoji" aria-hidden="true">{t.emoji}</span>
+          <span class="type-name">{t.label}</span>
+          <span class="type-desc">{t.desc}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
 
-	<section>
-		<div class="container-wide px-4 py-16 sm:px-6 sm:py-24 lg:px-10">
-			<div class="grid items-start gap-12 lg:grid-cols-2">
-				<div>
-					<p class="font-mono text-[10px] uppercase tracking-[0.18em] text-fg-muted">
-						For the lifelong writers
-					</p>
-					<h2 class="mt-4 font-display text-3xl leading-[1.1] tracking-tight sm:text-5xl">
-						Combine the best of <em class="text-accent not-italic">Day One</em>, <em
-							class="text-accent not-italic">Journey</em
-						>, and the apps you've outgrown.
-					</h2>
-				</div>
-				<div class="space-y-6 text-fg-muted">
-					<p>
-						Ten journal types — Daily, Gratitude, Learning, Reading, Travel, Work, Fitness,
-						Dream, Research, Reflection — and a fully custom type for everything else.
-					</p>
-					<p>
-						Tags, favorites, pinned entries, location, weather, templates, split-view editor,
-						fullscreen mode. Everything the well-loved journaling apps have, and nothing you
-						don't need.
-					</p>
-					<p class="font-display text-xl italic text-fg">
-						No social network. No likes. No followers. Just you and the page.
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
+  <section class="section">
+    <h2 class="section-h">What you get</h2>
+    <ul class="feat-list">
+      <li><strong>Markdown editor</strong> — live preview, autosave, full text in your browser.</li>
+      <li><strong>Calendar &amp; timeline</strong> — see a year at a glance.</li>
+      <li><strong>Memories</strong> — “on this day” one year ago, two years ago.</li>
+      <li><strong>Stats &amp; goals</strong> — track streaks, word counts, habits.</li>
+      <li><strong>Export anywhere</strong> — JSON, Markdown, ZIP. Re-import too.</li>
+      <li><strong>One sign-in</strong> — works across every <code>*.oriz.in</code> site.</li>
+    </ul>
+  </section>
+</BaseLayout>
 
-	<section class="border-t border-border/60">
-		<div class="container-wide px-4 py-16 text-center sm:px-6 sm:py-24 lg:px-10">
-			<h2 class="mx-auto max-w-3xl font-display text-3xl leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
-				Begin where you are. <br />Begin today.
-			</h2>
-			<p class="mx-auto mt-6 max-w-xl text-base text-fg-muted sm:text-lg">
-				It takes about 90 seconds to make your first entry.
-			</p>
-			<div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-				<a
-					href="/signup"
-					class="inline-flex h-12 items-center justify-center rounded-lg bg-ink px-7 text-base font-medium text-paper no-underline transition-colors hover:bg-ink-soft"
-				>
-					Start your first entry
-				</a>
-				<a
-					href="/dashboard"
-					class="inline-flex h-12 items-center justify-center rounded-lg border border-border bg-bg-elevated px-7 text-base font-medium no-underline transition-colors hover:bg-paper-sunken"
-				>
-					Try as a guest
-				</a>
-			</div>
-		</div>
-	</section>
-</MarketingLayout>
+<style>
+  .hero {
+    padding: clamp(2rem, 6vw, 5rem) 0 clamp(1.5rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .eyebrow {
+    color: var(--color-fg-muted);
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0 0 1rem;
+  }
+  .hero-h {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 1rem;
+    max-width: 22ch;
+  }
+  .hero-accent { color: var(--color-accent); }
+  .hero-lede {
+    color: var(--color-fg-muted);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: 56ch;
+    margin: 0 0 2rem;
+  }
+  .hero-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    height: 44px;
+    padding-inline: 1.25rem;
+    border-radius: var(--radius-button);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-soft);
+    color: var(--color-fg);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-accent-fg);
+    border-color: var(--color-accent);
+  }
+  .btn:hover { color: var(--color-fg); }
+  .btn-primary:hover { color: var(--color-accent-fg); }
+
+  .section { padding-block: clamp(2rem, 5vw, 4rem); }
+  .section-h {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  .section-lede {
+    color: var(--color-fg-muted);
+    margin: 0 0 1.5rem;
+    max-width: 56ch;
+  }
+
+  .type-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+  .type-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+  .type-emoji { font-size: 1.5rem; }
+  .type-name { font-weight: 600; }
+  .type-desc { font-size: 0.875rem; color: var(--color-fg-muted); }
+
+  .feat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    color: var(--color-fg-muted);
+    line-height: 1.6;
+  }
+  .feat-list strong { color: var(--color-fg); }
+  .feat-list code {
+    background: var(--color-bg-muted);
+    padding: 0.125em 0.375em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+</style>

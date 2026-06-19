@@ -1,112 +1,78 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import { FAMILY } from '@chirag127/oriz-ui'
+import { SITE_CONFIG } from '~/lib/siteConfig'
 
-const updated = "2026-06-19";
+const updated = FAMILY.legalUpdated
 ---
 
-<BaseLayout title="Cookie policy" description="What cookies Journal uses.">
-	<header class="container-prose page-head">
-		<p class="eyebrow"><a href="/">Journal</a> / <a href="/legal/">Legal</a> / Cookies</p>
-		<h1>Cookie policy</h1>
-		<p class="meta">Last updated: {updated}</p>
-	</header>
+<BaseLayout
+  title={`Cookie policy — ${SITE_CONFIG.name}`}
+  description={`What cookies ${SITE_CONFIG.name} uses.`}
+  showSidebar={false}
+>
+  <header class="container-prose page-head">
+    <p class="eyebrow"><a href="/">{SITE_CONFIG.name}</a> / <a href="/legal/">Legal</a> / Cookies</p>
+    <h1>Cookie policy</h1>
+    <p class="meta">Last updated: {updated}</p>
+  </header>
 
-	<article class="container-prose prose">
-		<p>
-			Journal uses the smallest set of cookies and storage we can get away
-			with. Most state lives in your own browser.
-		</p>
+  <article class="container-prose prose">
+    <p>
+      {SITE_CONFIG.name} uses the smallest set of cookies and storage we can
+      get away with.
+    </p>
 
-		<h2>What we set</h2>
-		<ul>
-			<li>
-				<strong>Theme</strong> — <code>localStorage</code> key
-				<code>theme</code> remembers light / dark / system. No tracking.
-			</li>
-			<li>
-				<strong>Editor + UI preferences</strong> — Journal stores autosave
-				cadence, recent journals, last-opened entry, and similar preferences
-				in <code>localStorage</code> under namespaced keys (e.g.
-				<code>journal:editor</code>). They never leave your device.
-			</li>
-			<li>
-				<strong>Auth session</strong> — when you sign in, Firebase
-				Authentication sets cookies on <code>auth.oriz.in</code> so you stay
-				logged in across every <code>*.oriz.in</code> site. These are
-				first-party and essential.
-			</li>
-			<li>
-				<strong>PWA cache</strong> — the service worker caches assets
-				(scripts, styles, fonts, images) in the browser's Cache Storage so
-				Journal works offline. No tracking; expires automatically.
-			</li>
-		</ul>
+    <h2>What we set</h2>
+    <ul>
+      <li>
+        <strong>Theme + accent</strong> — <code>localStorage</code> keys
+        <code>oriz:theme</code> and <code>oriz:accent</code> remember your
+        preference between visits. No tracking.
+      </li>
+      <li>
+        <strong>Auth session</strong> — when you sign in, Firebase Authentication
+        sets cookies on <code>{FAMILY.authDomain}</code> so you stay logged in across
+        every <code>*.oriz.in</code> site. These are first-party and essential.
+      </li>
+      <li>
+        <strong>Journal cache</strong> — the offline-first PWA caches your last
+        opened entries in <code>localStorage</code> / IndexedDB so you can read
+        them without a network. This data lives on your device only.
+      </li>
+    </ul>
 
-		<h2>Third parties</h2>
-		<ul>
-			<li>
-				<strong>Cloudflare</strong> may set anti-abuse cookies (Turnstile, bot
-				management). These are essential for site availability.
-			</li>
-			<li>
-				<strong>Google AdSense</strong> (once approved) may set advertising
-				cookies. The consent banner lets you opt out per-purpose.
-			</li>
-		</ul>
+    <h2>Third parties</h2>
+    <ul>
+      <li>
+        <strong>Cloudflare</strong> may set anti-abuse cookies (Turnstile, bot
+        management). These are essential for site availability.
+      </li>
+      <li>
+        <strong>Google AdSense</strong> (once approved) may set advertising
+        cookies. The consent banner lets you opt out per-purpose.
+      </li>
+    </ul>
 
-		<h2>Opting out</h2>
-		<p>
-			Clear localStorage and cookies for <code>journal.oriz.in</code> from
-			your browser's site-data settings. Theme, preferences, and auth will
-			reset. Your Firestore data is untouched — to delete that, use account
-			deletion in Settings.
-		</p>
-	</article>
+    <h2>Opting out</h2>
+    <p>
+      You can clear localStorage and cookies for any oriz domain from your
+      browser's site-data settings. Theme and auth will reset to defaults.
+    </p>
+  </article>
 </BaseLayout>
 
 <style>
-	.page-head {
-		padding-block: 3rem 1.5rem;
-		border-bottom: 1px solid var(--color-rule, #d9d0bd);
-	}
-	.eyebrow {
-		color: var(--color-ink-muted, #6b6256);
-		font-size: 0.8125rem;
-		margin: 0 0 0.5rem;
-	}
-	.eyebrow a { color: var(--color-ink-muted, #6b6256); text-decoration: none; }
-	h1 {
-		font-family: var(--font-display, "Fraunces", serif);
-		font-size: clamp(2rem, 4vw, 2.75rem);
-		font-weight: 600;
-		letter-spacing: -0.02em;
-		margin: 0;
-	}
-	.meta { color: var(--color-ink-subtle, #9a9082); font-size: 0.875rem; margin: 0.5rem 0 0; }
-	.prose {
-		padding-block: 2.5rem 4rem;
-		line-height: 1.7;
-		font-size: 1.0625rem;
-	}
-	.prose h2 {
-		font-family: var(--font-display, "Fraunces", serif);
-		font-size: 1.375rem;
-		font-weight: 600;
-		margin: 2rem 0 1rem;
-	}
-	.prose ul { padding-left: 1.5rem; margin: 0 0 1.25rem; }
-	.prose li { margin-bottom: 0.5rem; }
-	.prose p { margin: 0 0 1.25rem; }
-	.prose a { color: var(--color-sienna, #b45309); }
-	.prose code {
-		background: var(--color-paper-soft, #f1ece2);
-		padding: 0.125em 0.375em;
-		border-radius: 0.25rem;
-		font-size: 0.875em;
-	}
-	.container-prose {
-		max-width: 720px;
-		margin-inline: auto;
-		padding-inline: clamp(1rem, 4vw, 2rem);
-	}
+  .page-head { padding-block: 3rem 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .eyebrow { color: var(--color-fg-muted); font-size: 0.8125rem; margin: 0 0 0.5rem; }
+  .eyebrow a { color: var(--color-fg-muted); text-decoration: none; }
+  h1 { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+  .meta { color: var(--color-fg-soft); font-size: 0.875rem; margin: 0.5rem 0 0; }
+  .prose { padding-block: 2.5rem 4rem; color: var(--color-prose); line-height: 1.7; font-size: 1.0625rem; }
+  .prose h2 { font-family: var(--font-serif); font-size: 1.375rem; font-weight: 600; color: var(--color-fg); margin: 2rem 0 1rem; }
+  .prose ul { padding-left: 1.5rem; margin: 0 0 1.25rem; }
+  .prose li { margin-bottom: 0.5rem; }
+  .prose p { margin: 0 0 1.25rem; }
+  .prose a { color: var(--color-accent); }
+  .prose code { background: var(--color-bg-muted); padding: 0.125em 0.375em; border-radius: 0.25rem; font-size: 0.875em; }
 </style>

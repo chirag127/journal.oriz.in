@@ -1,0 +1,70 @@
+---
+/**
+ * Journal-specific sidebar. Sections:
+ *   - App: Dashboard, Today, New entry
+ *   - Browse: Calendar, Timeline, Memories, Tags, Favorites, Pinned
+ *   - Insights: Stats, Goals, Moods
+ *   - Workspace: Templates, Search, Settings
+ *   - Family: every site in the oriz family
+ *
+ * The actual journal app pages are queued behind a separate migration —
+ * for now these links land on /account/ (sign-in gate). Once the React app
+ * is rebuilt on top of oriz-ui, they will route to the real pages.
+ */
+import { Sidebar } from '@chirag127/oriz-ui'
+import { FAMILY_SITES } from '@chirag127/oriz-ui'
+import { SITE_CONFIG } from '~/lib/siteConfig'
+
+const path = Astro.url.pathname
+
+const sections = [
+  {
+    title: 'App',
+    links: [
+      { label: '📥 Dashboard', href: '/account/', active: path === '/account/' },
+      { label: '✍️ New entry', href: '/account/', badge: 'soon' },
+      { label: '📅 Today', href: '/account/', badge: 'soon' },
+    ],
+  },
+  {
+    title: 'Browse',
+    links: [
+      { label: '🗓️ Calendar', href: '/account/', badge: 'soon' },
+      { label: '⏳ Timeline', href: '/account/', badge: 'soon' },
+      { label: '🌟 Memories', href: '/account/', badge: 'soon' },
+      { label: '🏷️ Tags', href: '/account/', badge: 'soon' },
+      { label: '❤️ Favorites', href: '/account/', badge: 'soon' },
+      { label: '📌 Pinned', href: '/account/', badge: 'soon' },
+    ],
+  },
+  {
+    title: 'Insights',
+    links: [
+      { label: '📊 Stats', href: '/account/', badge: 'soon' },
+      { label: '🎯 Goals', href: '/account/', badge: 'soon' },
+      { label: '😊 Moods', href: '/account/', badge: 'soon' },
+    ],
+  },
+  {
+    title: 'Workspace',
+    links: [
+      { label: '📋 Templates', href: '/account/', badge: 'soon' },
+      { label: '🔎 Search', href: '/account/', badge: 'soon' },
+      { label: '⚙️ Settings', href: '/account/', badge: 'soon' },
+    ],
+  },
+  {
+    title: 'Family',
+    links: FAMILY_SITES
+      .filter((s) => s.slug !== SITE_CONFIG.slug)
+      .map((s) => ({ label: `${s.emoji} ${s.name}`, href: s.url })),
+  },
+]
+---
+
+<Sidebar
+  client:idle
+  siteName={SITE_CONFIG.name}
+  siteSlug={SITE_CONFIG.slug}
+  sections={sections}
+/>
