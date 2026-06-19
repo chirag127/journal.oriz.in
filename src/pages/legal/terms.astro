@@ -1,0 +1,107 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const updated = "2026-06-19";
+---
+
+<BaseLayout title="Terms of use" description="The rules for using Journal.">
+	<header class="container-prose page-head">
+		<p class="eyebrow"><a href="/">Journal</a> / <a href="/legal/">Legal</a> / Terms</p>
+		<h1>Terms of use</h1>
+		<p class="meta">Last updated: {updated}</p>
+	</header>
+
+	<article class="container-prose prose">
+		<p>
+			By using journal.oriz.in or any <code>*.oriz.in</code> site, you agree to these terms.
+			They are short on purpose.
+		</p>
+
+		<h2>Use the site lawfully</h2>
+		<p>
+			Don't try to break the site, scrape it at abusive rates, or use it
+			to harass others. Account takeover, copyright infringement, and any
+			activity prohibited under Indian law are forbidden.
+		</p>
+
+		<h2>Content is provided as-is</h2>
+		<p>
+			Journal's editor, exports, and analytics are provided for personal use
+			only. They are not professional advice or therapy. See the full
+			<a href="/legal/disclaimer/">disclaimer</a>.
+		</p>
+
+		<h2>Your content</h2>
+		<p>
+			Anything you save on Journal — entries, tags, goals, templates — stays
+			yours. You grant Journal a limited licence to store and serve that
+			content back to you. We do not read or share it. Account deletion wipes
+			it permanently.
+		</p>
+
+		<h2>Termination</h2>
+		<p>
+			You can delete your account at any time from in-app settings. We can
+			suspend accounts engaged in abuse without notice.
+		</p>
+
+		<h2>Limitation of liability</h2>
+		<p>
+			To the maximum extent permitted by law, Journal and its operator are not
+			liable for any indirect or consequential damages arising from use of
+			the site, including loss of entries due to browser, network, or
+			third-party-service failure. Export regularly.
+		</p>
+
+		<h2>Governing law</h2>
+		<p>
+			These terms are governed by the laws of India. Disputes will be settled
+			in the courts of Bhubaneswar, Odisha.
+		</p>
+	</article>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding-block: 3rem 1.5rem;
+		border-bottom: 1px solid var(--color-rule, #d9d0bd);
+	}
+	.eyebrow {
+		color: var(--color-ink-muted, #6b6256);
+		font-size: 0.8125rem;
+		margin: 0 0 0.5rem;
+	}
+	.eyebrow a { color: var(--color-ink-muted, #6b6256); text-decoration: none; }
+	h1 {
+		font-family: var(--font-display, "Fraunces", serif);
+		font-size: clamp(2rem, 4vw, 2.75rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		margin: 0;
+	}
+	.meta { color: var(--color-ink-subtle, #9a9082); font-size: 0.875rem; margin: 0.5rem 0 0; }
+	.prose {
+		padding-block: 2.5rem 4rem;
+		line-height: 1.7;
+		font-size: 1.0625rem;
+	}
+	.prose h2 {
+		font-family: var(--font-display, "Fraunces", serif);
+		font-size: 1.375rem;
+		font-weight: 600;
+		margin: 2rem 0 1rem;
+	}
+	.prose p { margin: 0 0 1.25rem; }
+	.prose a { color: var(--color-sienna, #b45309); }
+	.prose code {
+		background: var(--color-paper-soft, #f1ece2);
+		padding: 0.125em 0.375em;
+		border-radius: 0.25rem;
+		font-size: 0.875em;
+	}
+	.container-prose {
+		max-width: 720px;
+		margin-inline: auto;
+		padding-inline: clamp(1rem, 4vw, 2rem);
+	}
+</style>

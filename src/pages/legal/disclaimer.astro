@@ -1,0 +1,96 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const updated = "2026-06-19";
+---
+
+<BaseLayout title="Disclaimer" description="What Journal is and isn't.">
+	<header class="container-prose page-head">
+		<p class="eyebrow"><a href="/">Journal</a> / <a href="/legal/">Legal</a> / Disclaimer</p>
+		<h1>Disclaimer</h1>
+		<p class="meta">Last updated: {updated}</p>
+	</header>
+
+	<article class="container-prose prose">
+		<p>
+			Journal is published in good faith for general personal-journaling use.
+			Use it at your own risk.
+		</p>
+
+		<h2>Not therapy or medical advice</h2>
+		<p>
+			Mood tracking, gratitude prompts, and reflection journals can support
+			your wellbeing, but they are not a substitute for consultation with a
+			qualified mental-health professional or registered medical practitioner.
+			If you are in crisis, please contact a helpline or doctor.
+		</p>
+
+		<h2>Not financial advice</h2>
+		<p>
+			Anything you write or track in a finance-themed journal is your own
+			data. Journal does not provide investment, tax, or insurance advice.
+		</p>
+
+		<h2>Not legal advice</h2>
+		<p>
+			Articles touching on tax, regulation, or compliance reflect the author's
+			reading of the rules at the time of writing. Rules change. Verify with
+			your own counsel before acting.
+		</p>
+
+		<h2>Data durability</h2>
+		<p>
+			Journal stores your entries in Firebase Firestore. We expect Firestore to
+			be highly available, but no service is perfect. <strong>Export your data
+			regularly</strong> — Settings → Export gives you JSON / Markdown / ZIP at any
+			time. We are not liable for entries lost due to browser, network, or
+			third-party-service failure.
+		</p>
+
+		<h2>External links</h2>
+		<p>
+			We link to third-party sites (Firebase docs, oriz family, GitHub) we
+			find useful. We don't control their content, and inclusion is not an
+			endorsement.
+		</p>
+	</article>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding-block: 3rem 1.5rem;
+		border-bottom: 1px solid var(--color-rule, #d9d0bd);
+	}
+	.eyebrow {
+		color: var(--color-ink-muted, #6b6256);
+		font-size: 0.8125rem;
+		margin: 0 0 0.5rem;
+	}
+	.eyebrow a { color: var(--color-ink-muted, #6b6256); text-decoration: none; }
+	h1 {
+		font-family: var(--font-display, "Fraunces", serif);
+		font-size: clamp(2rem, 4vw, 2.75rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		margin: 0;
+	}
+	.meta { color: var(--color-ink-subtle, #9a9082); font-size: 0.875rem; margin: 0.5rem 0 0; }
+	.prose {
+		padding-block: 2.5rem 4rem;
+		line-height: 1.7;
+		font-size: 1.0625rem;
+	}
+	.prose h2 {
+		font-family: var(--font-display, "Fraunces", serif);
+		font-size: 1.375rem;
+		font-weight: 600;
+		margin: 2rem 0 1rem;
+	}
+	.prose p { margin: 0 0 1.25rem; }
+	.prose a { color: var(--color-sienna, #b45309); }
+	.container-prose {
+		max-width: 720px;
+		margin-inline: auto;
+		padding-inline: clamp(1rem, 4vw, 2rem);
+	}
+</style>
