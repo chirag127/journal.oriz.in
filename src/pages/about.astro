@@ -1,68 +1,107 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { FAMILY } from '@chirag127/oriz-ui'
+import { FAMILY } from '~/lib/family'
 import { SITE_CONFIG } from '~/lib/siteConfig'
 ---
 
 <BaseLayout
-  title={`About — ${SITE_CONFIG.name}`}
+  title={`about — ${SITE_CONFIG.name}`}
   description={`About ${SITE_CONFIG.name} — a privacy-first PWA journal in the oriz family.`}
-  showSidebar={false}
 >
-  <header class="container-prose page-head">
-    <p class="eyebrow"><a href="/">{SITE_CONFIG.name}</a> / About</p>
-    <h1>About Journal</h1>
-  </header>
+  <section class="spine prose-page">
+    <p class="eyebrow chrome"><a href="/">oriz-journal</a> / about</p>
+    <h1>About</h1>
 
-  <article class="container-prose prose">
     <p class="lede">
-      Journal is a privacy-first journal in the <a href={FAMILY.rootOrigin}>oriz family</a> —
-      ten journal types, offline-first, fully on the Firebase Spark plan.
+      A privacy-first PWA journal in the <a href={FAMILY.rootOrigin}>oriz family</a>.
+      Closes the door at 11pm. Rereads March before decisions.
     </p>
 
-    <h2>What this site does</h2>
+    <h2>What this is</h2>
     <p>
-      Capture today, revisit a year, notice who you’re becoming. Journal supports
-      daily, gratitude, learning, reading, travel, work, fitness, dream, research,
-      and reflection journals — plus any custom type you need. Moods, tags,
-      favorites, pinned entries, calendar, timeline, memories, stats, goals,
-      templates. Markdown editor with live preview, autosave, and full export
-      to JSON / Markdown / ZIP.
+      A place to capture today, revisit a year, and notice who you&rsquo;re becoming.
+      Daily, gratitude, learning, reading, travel, work, fitness, dream, research,
+      and reflection — ten kinds of entry, one editor. TipTap markdown, libsodium
+      sealed bytes, autosave every 4.5 seconds.
+    </p>
+
+    <h2>The seal</h2>
+    <p>
+      A small mark sits in the corner of every page. Solid when the entry is
+      encrypted to disk, hollow while you&rsquo;re typing, and pulses while
+      libsodium seals the bytes. It is the only animated element in the app.
     </p>
 
     <h2>Privacy by default</h2>
     <p>
-      Your entries live in Firestore under your own user ID. Nobody else can
-      read them — Firestore rules enforce this server-side. Account deletion
-      removes every Firestore document owned by your <code>uid</code>. No
-      tracking across sessions, no selling of data, no required signup.
+      Entries live in Firestore under your own user ID. Firestore rules enforce
+      it server-side. Account deletion removes every Firestore document owned
+      by your <code>uid</code>. No tracking across sessions, no selling of data,
+      no required signup. Plaintext never leaves the device when E2EE is on.
     </p>
 
-    <h2>Part of oriz</h2>
+    <h2>What is not here</h2>
     <p>
-      Journal is one site in the <a href={FAMILY.rootOrigin}>oriz family</a> —
-      a free collection of static sites covering books, cards, finance, dev
-      tools, blog, and journaling. Single sign-in via
-      <code>{FAMILY.authDomain}</code> works across every site.
+      No streak counters, no flame icons, no &ldquo;don&rsquo;t break the chain&rdquo;
+      nags. No AI features in the writing surface — no summarize, no sentiment,
+      no auto-tag. No padlock icon — the seal is the privacy signal.
+    </p>
+
+    <h2>One sign-in, every site</h2>
+    <p>
+      The same identity works across every <code>*.oriz.in</code> site. Anonymous
+      trial mode lets you start without an email; link an account later from
+      <a href="/account/">/account</a>.
     </p>
 
     <h2>Open source</h2>
     <p>
       Source: <a href={`https://github.com/${FAMILY.operator.githubHandle}/oriz-journal`}>github.com/{FAMILY.operator.githubHandle}/oriz-journal</a>.
-      Issues, PRs, and ideas welcome.
     </p>
-  </article>
+  </section>
 </BaseLayout>
 
 <style>
-  .page-head { padding-block: 3rem 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .eyebrow { color: var(--color-fg-muted); font-size: 0.8125rem; margin: 0 0 0.5rem; }
-  .eyebrow a { color: var(--color-fg-muted); text-decoration: none; }
-  h1 { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; letter-spacing: -0.02em; margin: 0; }
-  .prose { padding-block: 2.5rem 4rem; color: var(--color-prose); line-height: 1.75; font-size: 1.0625rem; }
-  .prose .lede { font-size: 1.1875rem; color: var(--color-fg); margin: 0 0 2rem; }
-  .prose h2 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; color: var(--color-fg); margin: 2.5rem 0 1rem; }
-  .prose p { margin: 0 0 1.25rem; }
-  .prose a { color: var(--color-accent); }
-  .prose code { background: var(--color-bg-muted); padding: 0.125em 0.375em; border-radius: 0.25rem; font-size: 0.875em; }
+  .prose-page {
+    padding-block: 3rem 4rem;
+    font-family: var(--font-body);
+    line-height: 1.7;
+  }
+  .eyebrow {
+    color: var(--graphite);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.75rem;
+  }
+  .eyebrow a { color: var(--graphite); text-decoration: none; }
+  .eyebrow a:hover { color: var(--seal-red); }
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 600;
+    margin: 0 0 1.5rem;
+  }
+  .lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--graphite);
+    max-width: 50ch;
+    margin: 0 0 2rem;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+  }
+  p { margin: 0 0 1rem; max-width: 66ch; }
+  a { color: inherit; text-decoration-color: var(--seal-red); }
+  a:hover { color: var(--seal-red); }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    color: var(--graphite);
+  }
 </style>

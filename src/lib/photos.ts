@@ -5,7 +5,7 @@
  * Storage is lazily initialised here (not in @chirag127/oriz-ui) so the rest
  * of the family does not pay the bundle cost.
  */
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { app } from './firebase'
 
 let _storage: ReturnType<typeof getStorage> | null = null

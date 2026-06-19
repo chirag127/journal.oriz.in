@@ -1,9 +1,331 @@
-@import 'tailwindcss';
-@import '@chirag127/oriz-ui/styles';
-@import '@chirag127/oriz-ui/components.css';
+@import "tailwindcss";
 
-/* Site-specific minor overrides for journal.oriz.in */
-.journal-emoji {
-  font-size: 2.5rem;
-  line-height: 1;
+/*
+ * oriz-journal — v2 design tokens.
+ *
+ * Auth-gated PWA for serious journalers. The seal is the entire visual
+ * language; everything else gets out of the way.
+ *
+ * Surface — DUSK (default, dark)
+ *   --ink-black  #0B0B10  frame (the dusk twilight beyond the page)
+ *   --dusk       #13131A  page chrome surface (4° blue cast off ink-black)
+ *   --page-cream #F5EFE0  the entry surface (load-bearing — body lives here)
+ *   --seal-red   #C25A3F  THE accent (justified by encryption-as-wax-seal)
+ *   --graphite   #6B6B73  chrome text, fingerprint marginalia, fade target
+ *   --rule       #1E1E26  1px hairlines on dusk
+ *
+ * Surface — DAWN (light variant via prefers-color-scheme: light)
+ *   --bone       #F5EFE0  frame (the same cream as dusk's page surface)
+ *   --paper      #FBF7EC  page surface
+ *   --ink        #1A1A22  body type
+ *   --seal-red   unchanged
+ *   --graphite   #585862  darker for dawn contrast
+ *   --rule       #E4DFD0
+ *
+ * Type stack
+ *   --font-display   GT Sectra → Source Serif 4 fallback. Entry titles +
+ *                    date heading + wordmark only. NOWHERE else.
+ *   --font-body      iA Writer Quattro Variable. The load-bearing typeface,
+ *                    purpose-built for sustained drafting.
+ *                    18px / 1.7 desktop; 17px / 1.65 mobile; 66ch hard cap.
+ *   --font-sans      Inter — chrome only (header, nav, word count,
+ *                    fingerprint, dates in lists). Tabular-nums on numerics.
+ *
+ * No italic display type. No tracking changes. No third surface, no card
+ * backgrounds, no elevation. WCAG AA verified on body text against both
+ * surfaces. Cream is flat — type does the work.
+ *
+ * The seal IS the privacy signal. No padlock icon. No emoji in chrome.
+ * No streak gamification. No AI in the writing surface. No persistent
+ * toolbar in the editor.
+ */
+
+@theme {
+  --font-display:
+    'GT Sectra', 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-body:
+    'iA Writer Quattro V', 'iA Writer Quattro', 'iA Writer Quattro S',
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-sans:
+    'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    'iA Writer Mono V', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* Layout — 720px column matches the brief; entry body further hard-capped
+     at 66ch via the `.measure` helper. */
+  --container-spine: 720px;
+  --container-prose: 66ch;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* DUSK — default. */
+    --ink-black: #0b0b10;
+    --dusk: #13131a;
+    --page-cream: #f5efe0;
+    --seal-red: #c25a3f;
+    --graphite: #6b6b73;
+    --rule: #1e1e26;
+
+    /* Dawn-only tokens — declared here so editor-on-dusk can still reach the
+       page-cream surface; switched at the @media block below. */
+    --paper: var(--page-cream);
+    --ink: #1a1a22;
+
+    /* Reserve hooks for the data-oriz-* auth/contact overrides. */
+    --highlighter: var(--seal-red);
+    --vermilion: var(--seal-red);
+    --mustard: var(--seal-red); /* auth overrides reach for `--mustard`; map to seal-red */
+
+    /* Legacy --color-* aliases for routes that haven't migrated tokens yet.
+       Mapped to v2 tokens so the existing TipTap, EntryList, etc. inherit
+       the dusk palette without per-component edits. */
+    --color-bg: var(--dusk);
+    --color-bg-soft: #1a1a22;
+    --color-bg-muted: #20202a;
+    --color-fg: var(--page-cream);
+    --color-prose: var(--page-cream);
+    --color-fg-muted: var(--graphite);
+    --color-fg-soft: #4a4a52;
+    --color-border: var(--rule);
+    --color-accent: var(--seal-red);
+    --color-accent-fg: var(--page-cream);
+    --radius-card: 0;
+    --radius-button: 0;
+    --container-page: 720px;
+  }
+
+  /* DAWN — light variant. Same cream as dusk's page surface inverted into
+     the frame; entry surface goes a shade brighter. */
+  @media (prefers-color-scheme: light) {
+    :root {
+      color-scheme: light;
+      --ink-black: #f5efe0; /* the bone frame */
+      --dusk: #f5efe0;
+      --page-cream: #fbf7ec;
+      --graphite: #585862;
+      --rule: #e4dfd0;
+
+      --paper: var(--page-cream);
+      --ink: #1a1a22;
+
+      --color-bg: var(--dusk);
+      --color-bg-soft: #efe8d6;
+      --color-bg-muted: #e4dfd0;
+      --color-fg: var(--ink);
+      --color-prose: var(--ink);
+      --color-fg-muted: var(--graphite);
+      --color-fg-soft: #7d7e88;
+      --color-accent-fg: var(--page-cream);
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1;
+  }
+
+  body {
+    background: var(--ink-black);
+    color: var(--page-cream);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-y: scroll;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 18px;
+      line-height: 1.7;
+    }
+  }
+
+  /* Tabular numerics on every numeric run in chrome. */
+  .mono,
+  code,
+  kbd,
+  pre,
+  samp,
+  time,
+  .tabular {
+    font-feature-settings:
+      "tnum" 1,
+      "zero" 1,
+      "calt" 0;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--seal-red) 35%, transparent);
+    color: var(--page-cream);
+  }
+
+  /* Default link — graphite, underline on hover, never seal-red unless the
+     component opts in. The seal is the only seal-red surface the page gets. */
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--graphite);
+  }
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--seal-red);
+    outline-offset: 2px;
+  }
+
+  /* Heading family — display serif, only when explicitly opted into. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  hr.hairline {
+    height: 1px;
+    background: var(--rule);
+    border: 0;
+    margin: 0;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--seal-red);
+    color: var(--page-cream);
+    padding: 0.5rem 1rem;
+    z-index: 100;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+}
+
+/* ── Layout helpers ──────────────────────────────────────────────────────── */
+
+.spine {
+  max-width: var(--container-spine);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 1.5rem);
+}
+
+.measure {
+  max-width: 66ch;
+  margin-inline: auto;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings:
+    "tnum" 1,
+    "zero" 1,
+    "calt" 0;
+}
+
+/* The page-cream entry surface — the editor + read-view live on top of this. */
+.page-cream {
+  background: var(--page-cream);
+  color: var(--ink, #1a1a22);
+}
+
+/* ── Editor body type — Quattro on cream ─────────────────────────────────── */
+
+.entry-body {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink, #1a1a22);
+  max-width: 66ch;
+}
+@media (min-width: 768px) {
+  .entry-body {
+    font-size: 18px;
+    line-height: 1.7;
+  }
+}
+.entry-body p {
+  margin: 0 0 1rem;
+}
+.entry-body h1,
+.entry-body h2,
+.entry-body h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+.entry-body h1 {
+  font-size: 1.75rem;
+}
+.entry-body h2 {
+  font-size: 1.375rem;
+}
+.entry-body h3 {
+  font-size: 1.125rem;
+}
+.entry-body ul,
+.entry-body ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1rem;
+}
+.entry-body blockquote {
+  border-left: 2px solid var(--seal-red);
+  padding-left: 0.875rem;
+  margin: 0 0 1rem;
+  color: var(--graphite);
+  font-style: italic;
+}
+.entry-body code {
+  background: rgb(0 0 0 / 0.06);
+  padding: 0.125em 0.375em;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+.entry-body pre {
+  background: rgb(0 0 0 / 0.06);
+  padding: 0.875rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+}
+.entry-body img {
+  max-width: 100%;
+  margin: 0.75rem 0;
+}
+.entry-body a {
+  color: inherit;
+  text-decoration-color: var(--seal-red);
+}
+
+/* ── Chrome utility classes ──────────────────────────────────────────────── */
+
+.chrome {
+  font-family: var(--font-sans);
+  color: var(--graphite);
+  font-size: 13px;
+}
+
+.chrome-strong {
+  color: var(--page-cream);
+}
+
+@media (prefers-color-scheme: light) {
+  .chrome-strong {
+    color: var(--ink, #1a1a22);
+  }
 }

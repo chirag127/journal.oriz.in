@@ -13,7 +13,11 @@ export default function TagPicker({ tags, suggestions = [], onChange }: Props) {
   const [draft, setDraft] = useState('')
 
   const add = (raw: string) => {
-    const t = raw.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '')
+    const t = raw
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
     if (!t || tags.includes(t)) return
     onChange([...tags, t])
     setDraft('')
@@ -26,7 +30,9 @@ export default function TagPicker({ tags, suggestions = [], onChange }: Props) {
         {tags.map((t) => (
           <span key={t} className="tag-chip">
             #{t}
-            <button type="button" onClick={() => remove(t)} aria-label={`Remove tag ${t}`}>×</button>
+            <button type="button" onClick={() => remove(t)} aria-label={`Remove tag ${t}`}>
+              ×
+            </button>
           </span>
         ))}
         <input
@@ -48,9 +54,14 @@ export default function TagPicker({ tags, suggestions = [], onChange }: Props) {
       </div>
       {suggestions.length > 0 && (
         <div className="tag-suggestions">
-          {suggestions.filter((s) => !tags.includes(s)).slice(0, 6).map((s) => (
-            <button key={s} type="button" onClick={() => add(s)} className="tag-suggest">+ {s}</button>
-          ))}
+          {suggestions
+            .filter((s) => !tags.includes(s))
+            .slice(0, 6)
+            .map((s) => (
+              <button key={s} type="button" onClick={() => add(s)} className="tag-suggest">
+                + {s}
+              </button>
+            ))}
         </div>
       )}
       <style>{`

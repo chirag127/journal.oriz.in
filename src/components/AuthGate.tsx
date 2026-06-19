@@ -1,10 +1,13 @@
 /**
- * AuthGate — guards a React subtree. If not signed in, renders an
- * inline prompt linking to /account/. Optionally signs the user in
- * anonymously so they can try the app immediately.
+ * AuthGate — v2.
+ *
+ * Guards a React subtree. Same behavior as v1 (anonymous bridge, account
+ * link CTA), restyled for the dusk surface: no card, no rounded corners,
+ * no soft-bg fill — just text and the seal-red CTA.
  */
-import { useState } from 'react'
+
 import { signInAnonymously } from 'firebase/auth'
+import { useState } from 'react'
 import { auth } from '~/lib/firebase'
 import { useAuthUser } from '~/lib/useAuthUser'
 
@@ -17,51 +20,107 @@ export default function AuthGate({ children, allowAnonymous = true }: Props) {
   const { user, loading } = useAuthUser()
   const [busy, setBusy] = useState(false)
 
-  if (loading) return <p className="auth-gate-loading">Loading…</p>
+  if (loading) return <p className="ag-loading chrome">Loading…</p>
 
   if (!user) {
     return (
-      <div className="auth-gate">
-        <div className="auth-gate-card">
-          <h2>Sign in to continue</h2>
-          <p>Your journal entries are tied to your account so they follow you across every <code>*.oriz.in</code> site.</p>
-          <div className="auth-gate-actions">
-            <a href="/account/" className="btn-primary">Open sign-in</a>
-            {allowAnonymous && (
+      <div className="ag">
+        <h2>Sign in to continue</h2>
+        <p>
+          Your journal entries are tied to your account so they follow you across every{' '}
+          <code>*.oriz.in</code> site.
+        </p>
+        <p className="ag-actions">
+          <a href="/account/" className="ag-primary">
+            open sign-in &rarr;
+          </a>
+          {allowAnonymous && (
+            <>
+              <span aria-hidden="true">·</span>
               <button
                 type="button"
-                className="btn-ghost"
+                className="ag-link"
                 disabled={busy}
                 onClick={async () => {
                   setBusy(true)
-                  try { await signInAnonymously(auth) } finally { setBusy(false) }
+                  try {
+                    await signInAnonymously(auth)
+                  } finally {
+                    setBusy(false)
+                  }
                 }}
               >
-                {busy ? 'Starting…' : 'Try without signing up'}
+                {busy ? 'starting…' : 'try without signing up'}
               </button>
-            )}
-          </div>
-          {allowAnonymous && (
-            <p className="auth-gate-fine">
-              Anonymous sessions stay on this device. Sign in later from <a href="/account/">Account</a> to link them.
-            </p>
+            </>
           )}
-        </div>
+        </p>
+        {allowAnonymous && (
+          <p className="ag-fine chrome">
+            Anonymous sessions stay on this device. Sign in later from{' '}
+            <a href="/account/">/account</a> to link them.
+          </p>
+        )}
         <style>{`
-          .auth-gate { padding: 3rem 1rem; display: grid; place-items: center; }
-          .auth-gate-card { max-width: 460px; padding: 2rem; background: var(--color-bg-soft); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
-          .auth-gate-card h2 { margin: 0 0 0.5rem; font-family: var(--font-serif); font-size: 1.375rem; font-weight: 600; }
-          .auth-gate-card p { color: var(--color-fg-muted); margin: 0 0 1rem; line-height: 1.6; }
-          .auth-gate-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
-          .btn-primary, .btn-ghost {
-            display: inline-flex; align-items: center; height: 40px; padding-inline: 1rem;
-            border-radius: var(--radius-button); font-size: 0.875rem; font-weight: 500;
-            text-decoration: none; cursor: pointer; border: 1px solid var(--color-border);
+          .ag {
+            padding: 2.5rem 0;
+            font-family: var(--font-body);
           }
-          .btn-primary { background: var(--color-accent); color: var(--color-accent-fg); border-color: var(--color-accent); }
-          .btn-ghost { background: transparent; color: var(--color-fg); }
-          .auth-gate-fine { font-size: 0.75rem; color: var(--color-fg-muted); margin: 0; }
-          .auth-gate-loading { padding: 3rem; text-align: center; color: var(--color-fg-muted); }
+          .ag h2 {
+            font-family: var(--font-display);
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+            color: var(--page-cream);
+          }
+          @media (prefers-color-scheme: light) {
+            .ag h2 { color: var(--ink, #1a1a22); }
+          }
+          .ag p {
+            color: var(--graphite);
+            line-height: 1.65;
+            margin: 0 0 1rem;
+            max-width: 56ch;
+          }
+          .ag code {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+          }
+          .ag-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+          }
+          .ag-primary {
+            color: var(--seal-red);
+            text-decoration: none;
+            border-bottom: 1px solid var(--seal-red);
+            padding-bottom: 1px;
+          }
+          .ag-primary:hover { background: color-mix(in oklab, var(--seal-red) 12%, transparent); }
+          .ag-link {
+            background: transparent;
+            border: 0;
+            color: var(--graphite);
+            font: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            padding: 0;
+          }
+          .ag-link:hover { color: var(--seal-red); }
+          .ag-fine {
+            font-size: 13px;
+            font-family: var(--font-sans);
+            color: var(--graphite);
+          }
+          .ag-fine a { color: inherit; text-decoration-color: var(--seal-red); }
+          .ag-loading {
+            padding: 3rem 0;
+            color: var(--graphite);
+          }
         `}</style>
       </div>
     )

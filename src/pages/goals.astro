@@ -1,7 +1,14 @@
 ---
-import AppPage from '~/layouts/AppPage.astro'
 import { GoalsPage } from '~/components/AppPages'
+import AppPage from '~/layouts/AppPage.astro'
 ---
-<AppPage title="Goals — Journal" heading="Goals" lede="Set targets — entries per period, words written, or streak length.">
+<AppPage title="goals — oriz-journal">
+  <h1 class="route-h">Goals</h1>
+  <p class="route-lede">Targets — entries per period, words written, or streak length.</p>
   <GoalsPage client:only="react" />
+  <style>
+    .route-h { font-family: var(--font-display); font-size: clamp(1.625rem, 4vw, 2rem); font-weight: 600; letter-spacing: -0.01em; margin: 0 0 0.5rem; color: var(--page-cream); }
+    .route-lede { font-family: var(--font-display); font-style: italic; font-size: 1.0625rem; color: var(--graphite); margin: 0 0 1.5rem; }
+    @media (prefers-color-scheme: light) { .route-h { color: var(--ink, #1a1a22); } }
+  </style>
 </AppPage>

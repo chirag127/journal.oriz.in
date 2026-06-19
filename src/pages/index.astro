@@ -1,7 +1,18 @@
 ---
+/*
+ * oriz-journal — landing / marketing index.
+ *
+ * Per the v2 brief: this is a quiet sales surface, NOT the dashboard. The
+ * dashboard lives at /dashboard (auth-gated). This page is what someone
+ * sees if they hit `journal.oriz.in` cold — a single column, a few
+ * sentences in display serif, and one CTA: "open the journal →".
+ *
+ * NO type-grid (the v1 ten emoji cards are deleted). NO feature grid. NO
+ * "what you get" cards. NO install prompt button (the PWA installs itself
+ * when the app shell loads). The seal is the hero.
+ */
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import { SITE_CONFIG } from '~/lib/siteConfig'
-import InstallPrompt from '~/components/InstallPrompt.tsx'
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -11,111 +22,165 @@ const jsonLd = {
   description: SITE_CONFIG.description,
   publisher: { '@type': 'Person', name: 'Chirag Singhal' },
 }
-
-const journalTypes = [
-  { emoji: '📖', label: 'Daily', desc: 'Capture your day' },
-  { emoji: '🙏', label: 'Gratitude', desc: 'What you’re thankful for' },
-  { emoji: '🎓', label: 'Learning', desc: 'Notes on what you’re learning' },
-  { emoji: '📚', label: 'Reading', desc: 'Books and articles' },
-  { emoji: '✈️', label: 'Travel', desc: 'Trips and journeys' },
-  { emoji: '💼', label: 'Work', desc: 'Career and projects' },
-  { emoji: '🏃', label: 'Fitness', desc: 'Body and movement' },
-  { emoji: '🌙', label: 'Dream', desc: 'Dreams and visions' },
-  { emoji: '🔬', label: 'Research', desc: 'Studies and inquiry' },
-  { emoji: '✨', label: 'Reflection', desc: 'Deep reflection' },
-]
-
-const features = [
-  { title: 'Rich-text editor', body: 'Tiptap-powered with headings, lists, tasks, code blocks, and inline images. Autosaves every 4.5 seconds.' },
-  { title: 'Calendar + heatmap', body: 'See a year at a glance. Mood color per day, keyboard navigable.' },
-  { title: 'Memories', body: '“On this day” one, two, three, and five years ago — surfaced automatically.' },
-  { title: 'Stats + streaks', body: 'Current and longest streak, words written, mood trend chart, top tags, journal-type pie.' },
-  { title: 'Export anywhere', body: 'JSON, Markdown ZIP, single Markdown bundle, PDF. Re-import Day One JSON, CSV, or Markdown.' },
-  { title: 'PWA, offline-first', body: 'Install on your phone or desktop. Service worker precaches the app shell. Works offline; syncs when back.' },
-  { title: 'Photos', body: 'Drag-drop image upload to your private Firebase Storage bucket, scoped by entry.' },
-  { title: 'Optional E2EE', body: 'Toggle on encryption — entry bodies sealed with a passphrase-derived key via libsodium.' },
-  { title: 'One sign-in', body: 'Same identity as every other oriz site. Anonymous trial mode. No tracking, no ads.' },
-]
 ---
 
-<BaseLayout jsonLd={jsonLd} showSidebar={false}>
-  <section class="hero">
-    <p class="eyebrow">📓 Journal · oriz family</p>
-    <h1 class="hero-h">
-      A quiet place for the thoughts <span class="hero-accent">worth keeping</span>.
-    </h1>
-    <p class="hero-lede">
-      A privacy-first PWA journal. Ten built-in journal types. Tiptap editor.
-      Mood, tags, calendar heatmap, memories, streaks, full-text search, photos,
-      exports, optional end-to-end encryption. Free. Yours.
+<BaseLayout jsonLd={jsonLd}>
+  <section class="spine landing">
+    <h1 class="landing-h">A quiet place for the thoughts worth keeping.</h1>
+
+    <p class="landing-lede">
+      A privacy-first PWA journal. Tiptap editor, libsodium-sealed entries,
+      offline-first, ten kinds of journal. Plaintext never leaves the device.
     </p>
-    <div class="hero-cta">
-      <a href="/dashboard" class="btn btn-primary">Open the app →</a>
-      <a href="/account/" class="btn">Sign in</a>
-      <InstallPrompt client:idle />
-    </div>
-  </section>
 
-  <section class="section">
-    <h2 class="section-h">Ten ways to write</h2>
-    <p class="section-lede">
-      Pick a journal type — or use them all. Each entry tags itself with mood, tags, and (optionally) location and weather.
+    <hr class="hairline" />
+
+    <p class="landing-cta">
+      <a href="/dashboard" class="landing-cta-primary">open the journal &rarr;</a>
     </p>
-    <ul class="type-grid">
-      {journalTypes.map((t) => (
-        <li class="type-card">
-          <span class="type-emoji" aria-hidden="true">{t.emoji}</span>
-          <span class="type-name">{t.label}</span>
-          <span class="type-desc">{t.desc}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
 
-  <section class="section">
-    <h2 class="section-h">What you get</h2>
-    <ul class="feat-grid">
-      {features.map((f) => (
-        <li class="feat-card">
-          <strong>{f.title}</strong>
-          <span>{f.body}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
+    <hr class="hairline" />
 
-  <section class="section section-cta">
-    <h2 class="section-h">Ready when you are.</h2>
-    <p class="section-lede">Anonymous trial, no email required. Convert to a real account whenever.</p>
-    <div class="hero-cta">
-      <a href="/dashboard" class="btn btn-primary">Open the app →</a>
-      <a href="/about" class="btn">About Journal</a>
-    </div>
+    <dl class="landing-defs">
+      <div>
+        <dt>The seal</dt>
+        <dd>
+          A small mark in the corner of every page. Solid when the entry is
+          encrypted to disk, hollow while you&rsquo;re typing, and pulses while
+          libsodium seals the bytes. It is the only thing that moves.
+        </dd>
+      </div>
+      <div>
+        <dt>Cream on dusk</dt>
+        <dd>
+          Entries live on a cream page floating on an ink-black frame. iA
+          Writer Quattro for the body, GT Sectra for the date, Inter for the
+          chrome. 66 characters per line. The room is quiet on purpose.
+        </dd>
+      </div>
+      <div>
+        <dt>What is not here</dt>
+        <dd>
+          No streak counters, no flame icons, no <em>don&rsquo;t break the chain</em>
+          nags. No AI in the writing surface. No padlock icon — the seal is
+          the privacy signal. No emoji.
+        </dd>
+      </div>
+      <div>
+        <dt>Yours</dt>
+        <dd>
+          Free. Open source. Anonymous trial, no email needed. Sign in later
+          to sync across devices via the shared oriz account, which works on
+          every <code>*.oriz.in</code> site.
+        </dd>
+      </div>
+    </dl>
+
+    <p class="landing-meta chrome">
+      <a href="/account/">sign in</a> · <a href="/about">about</a> ·
+      <a href="/legal/privacy/">privacy</a> ·
+      <a href={`https://github.com/chirag127/oriz-journal`}>source</a>
+    </p>
   </section>
 </BaseLayout>
 
 <style>
-  .hero { padding: clamp(2rem, 6vw, 5rem) 0 clamp(1.5rem, 4vw, 3rem); border-bottom: 1px solid var(--color-border); }
-  .eyebrow { color: var(--color-fg-muted); font-size: 0.8125rem; letter-spacing: 0.05em; text-transform: uppercase; margin: 0 0 1rem; }
-  .hero-h { font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 1rem; max-width: 22ch; }
-  .hero-accent { color: var(--color-accent); }
-  .hero-lede { color: var(--color-fg-muted); font-size: 1.125rem; line-height: 1.6; max-width: 56ch; margin: 0 0 2rem; }
-  .hero-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
-  .btn { display: inline-flex; align-items: center; height: 44px; padding-inline: 1.25rem; border-radius: var(--radius-button); border: 1px solid var(--color-border); background: var(--color-bg-soft); color: var(--color-fg); text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
-  .btn-primary { background: var(--color-accent); color: var(--color-accent-fg); border-color: var(--color-accent); }
-  .btn:hover { color: var(--color-fg); }
-  .btn-primary:hover { color: var(--color-accent-fg); }
-  .section { padding-block: clamp(2rem, 5vw, 4rem); }
-  .section-cta { border-top: 1px solid var(--color-border); }
-  .section-h { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5rem; }
-  .section-lede { color: var(--color-fg-muted); margin: 0 0 1.5rem; max-width: 56ch; }
-  .type-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; }
-  .type-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem; background: var(--color-bg-soft); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
-  .type-emoji { font-size: 1.5rem; }
-  .type-name { font-weight: 600; }
-  .type-desc { font-size: 0.875rem; color: var(--color-fg-muted); }
-  .feat-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
-  .feat-card { padding: 1rem 1.125rem; background: var(--color-bg-soft); border: 1px solid var(--color-border); border-radius: var(--radius-card); display: flex; flex-direction: column; gap: 0.25rem; }
-  .feat-card strong { font-family: var(--font-serif); font-size: 1rem; font-weight: 600; }
-  .feat-card span { color: var(--color-fg-muted); line-height: 1.5; font-size: 0.875rem; }
+  .landing {
+    padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 6vw, 4rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .landing-h {
+    font-family: var(--font-display);
+    font-size: clamp(1.875rem, 5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    margin: 0;
+    max-width: 22ch;
+    color: var(--page-cream);
+  }
+  @media (prefers-color-scheme: light) {
+    .landing-h { color: var(--ink, #1a1a22); }
+  }
+  .landing-lede {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--graphite);
+    max-width: 56ch;
+    margin: 0;
+  }
+  .landing-cta {
+    margin: 0.5rem 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+  }
+  .landing-cta-primary {
+    color: var(--seal-red);
+    text-decoration: none;
+    border-bottom: 1px solid var(--seal-red);
+    padding-bottom: 1px;
+  }
+  .landing-cta-primary:hover {
+    background: color-mix(in oklab, var(--seal-red) 12%, transparent);
+  }
+  .landing-defs {
+    margin: 1rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-family: var(--font-body);
+  }
+  .landing-defs > div {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 600px) {
+    .landing-defs > div { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+  .landing-defs dt {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--page-cream);
+  }
+  @media (prefers-color-scheme: light) {
+    .landing-defs dt { color: var(--ink, #1a1a22); }
+  }
+  .landing-defs dd {
+    margin: 0;
+    color: var(--graphite);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .landing-defs dd em { color: var(--page-cream); font-style: italic; }
+  @media (prefers-color-scheme: light) {
+    .landing-defs dd em { color: var(--ink, #1a1a22); }
+  }
+  .landing-defs dd code {
+    background: rgb(255 255 255 / 0.05);
+    padding: 0.125em 0.375em;
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    color: var(--graphite);
+  }
+  @media (prefers-color-scheme: light) {
+    .landing-defs dd code { background: rgb(0 0 0 / 0.05); }
+  }
+  .landing-meta {
+    margin: 2rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--graphite);
+  }
+  .landing-meta a {
+    color: var(--graphite);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--rule);
+  }
+  .landing-meta a:hover { color: var(--seal-red); text-decoration-color: var(--seal-red); }
 </style>

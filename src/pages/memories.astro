@@ -1,7 +1,29 @@
 ---
-import AppPage from '~/layouts/AppPage.astro'
 import { MemoriesPage } from '~/components/AppPages'
+import AppPage from '~/layouts/AppPage.astro'
 ---
-<AppPage title="Memories — Journal" heading="Memories" lede="On this day — entries from one, two, three, and five years ago.">
+<AppPage title="memories — oriz-journal">
+  <h1 class="route-h">Memories</h1>
+  <p class="route-lede">On this day — entries from one, two, three, and five years ago.</p>
   <MemoriesPage client:only="react" />
+  <style>
+    .route-h {
+      font-family: var(--font-display);
+      font-size: clamp(1.625rem, 4vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 0 0 0.5rem;
+      color: var(--page-cream);
+    }
+    .route-lede {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.0625rem;
+      color: var(--graphite);
+      margin: 0 0 1.5rem;
+    }
+    @media (prefers-color-scheme: light) {
+      .route-h { color: var(--ink, #1a1a22); }
+    }
+  </style>
 </AppPage>

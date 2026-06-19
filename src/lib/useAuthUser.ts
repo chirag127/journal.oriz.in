@@ -2,8 +2,9 @@
  * useAuthUser — tiny React hook over Firebase auth.
  * Anonymous sign-in fallback so users can try the app without making an account.
  */
-import { useEffect, useState } from 'react'
+
 import { onAuthStateChanged, signInAnonymously, type User } from 'firebase/auth'
+import { useEffect, useState } from 'react'
 import { auth } from './firebase'
 
 export interface AuthState {

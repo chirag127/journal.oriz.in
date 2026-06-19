@@ -3,12 +3,27 @@
  * Uses recharts for the line + bar charts.
  */
 import { useEffect, useMemo, useState } from 'react'
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts'
-import { listEntries, getStreak, recomputeStreak } from '~/lib/journalDb'
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import { getStreak, listEntries, recomputeStreak } from '~/lib/journalDb'
 import type { Entry, StreakCounter } from '~/lib/types'
-import { MOODS, JOURNAL_TYPES } from '~/lib/types'
+import { JOURNAL_TYPES } from '~/lib/types'
 
-interface Props { uid: string }
+interface Props {
+  uid: string
+}
 
 const MOOD_VALUE: Record<string, number> = { great: 5, good: 4, neutral: 3, low: 2, bad: 1 }
 
@@ -21,15 +36,21 @@ export default function StatsView({ uid }: Props) {
     let cancelled = false
     Promise.all([listEntries(uid, { limit: 1000 }), getStreak(uid)]).then(([rows, s]) => {
       if (cancelled) return
-      setEntries(rows); setStreak(s)
+      setEntries(rows)
+      setStreak(s)
       // background recompute
-      recomputeStreak(uid).then((s2) => !cancelled && setStreak(s2)).catch(() => {})
+      recomputeStreak(uid)
+        .then((s2) => !cancelled && setStreak(s2))
+        .catch(() => {})
     })
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [uid])
 
   const moodTrend = useMemo(() => {
-    const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - range)
+    const cutoff = new Date()
+    cutoff.setDate(cutoff.getDate() - range)
     const daily: Record<string, { sum: number; n: number }> = {}
     for (const e of entries) {
       if (!e.mood) continue
@@ -47,16 +68,34 @@ export default function StatsView({ uid }: Props) {
   const topTags = useMemo(() => {
     const counts: Record<string, number> = {}
     for (const e of entries) for (const t of e.tags || []) counts[t] = (counts[t] || 0) + 1
-    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([tag, count]) => ({ tag, count }))
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([tag, count]) => ({ tag, count }))
   }, [entries])
 
   const typeDist = useMemo(() => {
     const counts: Record<string, number> = {}
     for (const e of entries) counts[e.journalType] = (counts[e.journalType] || 0) + 1
-    return JOURNAL_TYPES.map((t) => ({ name: t.label, value: counts[t.id] || 0, emoji: t.emoji })).filter((r) => r.value > 0)
+    return JOURNAL_TYPES.map((t) => ({
+      name: t.label,
+      value: counts[t.id] || 0,
+      emoji: t.emoji,
+    })).filter((r) => r.value > 0)
   }, [entries])
 
-  const PIE_COLORS = ['#f59e0b', '#10b981', '#0ea5e9', '#8b5cf6', '#f43f5e', '#84cc16', '#a78bfa', '#22d3ee', '#fb923c', '#94a3b8']
+  const PIE_COLORS = [
+    '#f59e0b',
+    '#10b981',
+    '#0ea5e9',
+    '#8b5cf6',
+    '#f43f5e',
+    '#84cc16',
+    '#a78bfa',
+    '#22d3ee',
+    '#fb923c',
+    '#94a3b8',
+  ]
 
   return (
     <div className="sv">
@@ -64,7 +103,10 @@ export default function StatsView({ uid }: Props) {
         <Card label="Current streak" value={streak?.current ?? 0} suffix="days" />
         <Card label="Longest streak" value={streak?.longest ?? 0} suffix="days" />
         <Card label="Total entries" value={streak?.totalEntries ?? entries.length} />
-        <Card label="Total words" value={streak?.totalWords ?? entries.reduce((s, e) => s + (e.wordCount || 0), 0)} />
+        <Card
+          label="Total words"
+          value={streak?.totalWords ?? entries.reduce((s, e) => s + (e.wordCount || 0), 0)}
+        />
       </div>
 
       <section className="sv-block">
@@ -72,7 +114,14 @@ export default function StatsView({ uid }: Props) {
           <h2>Mood trend</h2>
           <div className="sv-range">
             {[30, 90, 365].map((r) => (
-              <button key={r} type="button" className={range === r ? 'on' : ''} onClick={() => setRange(r as 30 | 90 | 365)}>{r}d</button>
+              <button
+                key={r}
+                type="button"
+                className={range === r ? 'on' : ''}
+                onClick={() => setRange(r as 30 | 90 | 365)}
+              >
+                {r}d
+              </button>
             ))}
           </div>
         </div>
@@ -80,9 +129,26 @@ export default function StatsView({ uid }: Props) {
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={moodTrend} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
               <XAxis dataKey="date" hide />
-              <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} fontSize={11} stroke="var(--color-fg-muted)" />
-              <Tooltip contentStyle={{ background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)', fontSize: 12 }} />
-              <Line type="monotone" dataKey="mood" stroke="var(--color-accent)" strokeWidth={2} dot={false} />
+              <YAxis
+                domain={[1, 5]}
+                ticks={[1, 2, 3, 4, 5]}
+                fontSize={11}
+                stroke="var(--color-fg-muted)"
+              />
+              <Tooltip
+                contentStyle={{
+                  background: 'var(--color-bg-soft)',
+                  border: '1px solid var(--color-border)',
+                  fontSize: 12,
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="mood"
+                stroke="var(--color-accent)"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -90,13 +156,27 @@ export default function StatsView({ uid }: Props) {
 
       <section className="sv-block">
         <h2>Top tags</h2>
-        {topTags.length === 0 ? <p style={{ color: 'var(--color-fg-muted)' }}>No tags yet.</p> : (
+        {topTags.length === 0 ? (
+          <p style={{ color: 'var(--color-fg-muted)' }}>No tags yet.</p>
+        ) : (
           <div className="sv-chart">
             <ResponsiveContainer width="100%" height={Math.max(160, topTags.length * 22)}>
               <BarChart data={topTags} layout="vertical" margin={{ left: 8, right: 8 }}>
                 <XAxis type="number" hide />
-                <YAxis type="category" dataKey="tag" width={120} fontSize={11} stroke="var(--color-fg-muted)" />
-                <Tooltip contentStyle={{ background: 'var(--color-bg-soft)', border: '1px solid var(--color-border)', fontSize: 12 }} />
+                <YAxis
+                  type="category"
+                  dataKey="tag"
+                  width={120}
+                  fontSize={11}
+                  stroke="var(--color-fg-muted)"
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: 'var(--color-bg-soft)',
+                    border: '1px solid var(--color-border)',
+                    fontSize: 12,
+                  }}
+                />
                 <Bar dataKey="count" fill="var(--color-accent)" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -106,12 +186,16 @@ export default function StatsView({ uid }: Props) {
 
       <section className="sv-block">
         <h2>Journal-type distribution</h2>
-        {typeDist.length === 0 ? <p style={{ color: 'var(--color-fg-muted)' }}>No entries yet.</p> : (
+        {typeDist.length === 0 ? (
+          <p style={{ color: 'var(--color-fg-muted)' }}>No entries yet.</p>
+        ) : (
           <div className="sv-chart">
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
                 <Pie data={typeDist} dataKey="value" nameKey="name" outerRadius={80} label>
-                  {typeDist.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
+                  {typeDist.map((_, i) => (
+                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                  ))}
                 </Pie>
                 <Legend wrapperStyle={{ fontSize: 12 }} />
               </PieChart>
@@ -139,7 +223,9 @@ function Card({ label, value, suffix }: { label: string; value: number; suffix?:
   return (
     <div className="stat-card">
       <span className="stat-label">{label}</span>
-      <span className="stat-value">{value.toLocaleString()} {suffix && <small>{suffix}</small>}</span>
+      <span className="stat-value">
+        {value.toLocaleString()} {suffix && <small>{suffix}</small>}
+      </span>
       <style>{`
         .stat-card { padding: 1rem; background: var(--color-bg-soft); border: 1px solid var(--color-border); border-radius: var(--radius-card); display: flex; flex-direction: column; gap: 0.25rem; }
         .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-fg-muted); }

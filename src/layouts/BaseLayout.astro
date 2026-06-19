@@ -1,9 +1,22 @@
 ---
+/*
+ * BaseLayout — v2.
+ *
+ * Dusk-on-ink-black. Loads GT Sectra (via Google Fonts' Source Serif 4
+ * fallback — Sectra is licensed and not on CDN, so the brief's Source
+ * Serif 4 fallback ships first; if the user has Sectra installed locally
+ * the @theme stack picks it up first), iA Writer Quattro Variable (from
+ * jsDelivr CDN — iA's open-source variable font), and Inter for chrome.
+ *
+ * THE SEAL — rendered as a React island top-right of every page. Its state
+ * defaults to 'sealed' (the rest state); editor + read-view dispatch
+ * `seal:set` events to transition.
+ */
 import '~/styles/global.css'
-import preflight from '~/lib/preflight.js?raw'
-import Header from '~/components/Header.astro'
+import '~/styles/oriz-ui-overrides.css'
 import Footer from '~/components/Footer.astro'
-import SiteSidebar from '~/components/SiteSidebar.astro'
+import Header from '~/components/Header.astro'
+import Seal from '~/components/Seal'
 import { SITE_CONFIG } from '~/lib/siteConfig'
 
 interface Props {
@@ -12,7 +25,12 @@ interface Props {
   canonical?: string
   noindex?: boolean
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
-  showSidebar?: boolean
+  /** Hide the chrome header (used by the editor, which manages its own header). */
+  hideHeader?: boolean
+  /** Hide the colophon footer (used by the editor + dashboard which end on whitespace). */
+  hideFooter?: boolean
+  /** Initial seal state — defaults to 'sealed'. Editor sets 'typing'. */
+  initialSealState?: 'typing' | 'sealing' | 'sealed' | 'closing'
 }
 
 const {
@@ -21,7 +39,9 @@ const {
   canonical = `${SITE_CONFIG.origin}${Astro.url.pathname}`,
   noindex = false,
   jsonLd,
-  showSidebar = true,
+  hideHeader = false,
+  hideFooter = false,
+  initialSealState = 'sealed',
 } = Astro.props
 
 const adsenseClient = import.meta.env.PUBLIC_ADSENSE_CLIENT
@@ -30,11 +50,13 @@ const ga4Id = import.meta.env.PUBLIC_GA4_ID
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark" data-accent="amber">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0B0B10" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F5EFE0" media="(prefers-color-scheme: light)" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -50,12 +72,17 @@ const ga4Id = import.meta.env.PUBLIC_GA4_ID
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap"
       rel="stylesheet"
     />
-
-    <script is:inline set:html={preflight} />
+    <!-- iA Writer Quattro Variable — open source, served from cdnjs / jsDelivr.
+         Ships @font-face declarations for the variable axes the editor needs. -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/iaolo/iA-Fonts@master/iA%20Writer%20Quattro/Variable/Webfonts/iAWriterQuattroV.css"
+    />
 
     {jsonLd && (
       <script
@@ -92,40 +119,9 @@ const ga4Id = import.meta.env.PUBLIC_GA4_ID
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
-    <Header />
-    <div class="layout-shell">
-      {showSidebar && <SiteSidebar />}
-      <main id="main" class="layout-main"><slot /></main>
-    </div>
-    <Footer />
-
-    <style is:global>
-      .skip-link {
-        position: absolute;
-        left: -9999px;
-        top: 0;
-        background: var(--color-accent);
-        color: var(--color-accent-fg);
-        padding: 0.5rem 1rem;
-        z-index: 100;
-        border-radius: 0 0 0.5rem 0;
-      }
-      .skip-link:focus { left: 0; }
-      .layout-shell {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-      .layout-main { min-width: 0; }
-      @media (min-width: 1024px) {
-        .layout-shell {
-          grid-template-columns: 260px minmax(0, 1fr);
-          gap: 2rem;
-          max-width: 1400px;
-          margin-inline: auto;
-          padding-inline: clamp(1rem, 4vw, 2rem);
-        }
-      }
-    </style>
+    {!hideHeader && <Header />}
+    <main id="main"><slot /></main>
+    {!hideFooter && <Footer />}
+    <Seal client:idle initialState={initialSealState} />
   </body>
 </html>

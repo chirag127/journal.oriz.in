@@ -9,7 +9,8 @@ export const BUILTIN_TEMPLATES: Omit<Template, 'createdAt' | 'updatedAt'>[] = [
   {
     id: 'tpl-daily',
     name: 'Daily',
-    description: 'A flexible daily entry. Three sections: how you feel, what happened, what is next.',
+    description:
+      'A flexible daily entry. Three sections: how you feel, what happened, what is next.',
     structure: `# How am I today?
 
 _(write a sentence about your mood and energy)_
@@ -26,7 +27,8 @@ _(write a sentence about your mood and energy)_
   {
     id: 'tpl-gratitude',
     name: 'Gratitude',
-    description: 'Three things you are grateful for, plus one thing you appreciated about yourself.',
+    description:
+      'Three things you are grateful for, plus one thing you appreciated about yourself.',
     structure: `# Gratitude
 
 ## Three things I am grateful for

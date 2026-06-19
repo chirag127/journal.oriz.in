@@ -1,0 +1,56 @@
+---
+/*
+ * Wordmark — `oriz-journal` set in GT Sectra 18px page-cream lowercase.
+ *
+ * Per the v2 brief: journal does NOT use the family `oriz` z-strike wordmark.
+ * It carries its own quiet wordmark — the seal already carries the brand
+ * weight. This is just a name, in display serif, lowercased, no ornament.
+ *
+ * The seal (the actual signature) is rendered separately, top-right of every
+ * page, by `Seal.tsx`.
+ */
+
+interface Props {
+  /** Wrap in an <a href="/dashboard"> — defaults true. */
+  href?: string | null
+  /** Display size in px. Defaults to 18 (the chrome wordmark size). */
+  size?: number
+}
+
+const { href = '/dashboard', size = 18 } = Astro.props
+---
+
+{
+  href ? (
+    <a class="wm-link" href={href} aria-label="oriz-journal — dashboard">
+      <span class="wm" style={`--wm-size: ${size}px;`}>oriz-journal</span>
+    </a>
+  ) : (
+    <span class="wm" style={`--wm-size: ${size}px;`}>oriz-journal</span>
+  )
+}
+
+<style>
+  .wm-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .wm {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--wm-size, 18px);
+    letter-spacing: -0.005em;
+    color: var(--page-cream);
+    line-height: 1;
+    text-transform: lowercase;
+  }
+  @media (prefers-color-scheme: light) {
+    .wm {
+      color: var(--ink, #1a1a22);
+    }
+  }
+  .wm-link:focus-visible {
+    outline: 2px solid var(--seal-red);
+    outline-offset: 4px;
+  }
+</style>

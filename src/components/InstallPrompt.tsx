@@ -14,8 +14,14 @@ export default function InstallPrompt() {
   const [installed, setInstalled] = useState(false)
 
   useEffect(() => {
-    const onPrompt = (e: Event) => { e.preventDefault(); setEvt(e as BeforeInstallPromptEvent) }
-    const onInstalled = () => { setInstalled(true); setEvt(null) }
+    const onPrompt = (e: Event) => {
+      e.preventDefault()
+      setEvt(e as BeforeInstallPromptEvent)
+    }
+    const onInstalled = () => {
+      setInstalled(true)
+      setEvt(null)
+    }
     window.addEventListener('beforeinstallprompt', onPrompt)
     window.addEventListener('appinstalled', onInstalled)
     if (window.matchMedia?.('(display-mode: standalone)').matches) setInstalled(true)

@@ -1,10 +1,19 @@
 ---
-/**
- * Edit-view shell. Firebase Hosting rewrites /entries/{id}/edit to /entries/edit.
- */
-import AppPage from '~/layouts/AppPage.astro'
 import { EditEntryPage } from '~/components/AppPages'
+/*
+ * Edit-view shell. Firebase Hosting rewrites /entries/{id}/edit to /entries/edit.
+ *
+ * Same treatment as `new`: full-bleed editor, header hidden, the editor
+ * surface controls the chrome fade and the seal.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
-<AppPage title="Edit entry — Journal" heading="Edit entry">
+<BaseLayout
+  title="edit — oriz-journal"
+  noindex={true}
+  hideHeader={true}
+  hideFooter={true}
+  initialSealState="sealed"
+>
   <EditEntryPage client:only="react" />
-</AppPage>
+</BaseLayout>

@@ -10,9 +10,8 @@
   try {
     const t = localStorage.getItem('oriz:theme') || 'dark'
     const a = localStorage.getItem('oriz:accent') || 'amber'
-    const theme = t === 'system'
-      ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : t
+    const theme =
+      t === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : t
     document.documentElement.setAttribute('data-theme', theme)
     document.documentElement.setAttribute('data-accent', a)
   } catch {

@@ -1,16 +1,15 @@
 ---
+import FinishSignIn from '~/components/FinishSignIn'
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { FinishSignIn } from '@chirag127/oriz-ui'
 import { SITE_CONFIG } from '~/lib/siteConfig'
 ---
 
 <BaseLayout
-  title={`Finishing sign-in — ${SITE_CONFIG.name}`}
+  title={`finishing sign-in — ${SITE_CONFIG.name}`}
   description="Completing email-link sign-in."
   noindex={true}
-  showSidebar={false}
 >
-  <section class="container-prose finish">
+  <section class="spine finish">
     <FinishSignIn client:load />
   </section>
 </BaseLayout>

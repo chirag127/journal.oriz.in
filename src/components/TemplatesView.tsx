@@ -2,18 +2,22 @@
  * TemplatesView — gallery of built-in + user templates with a "Use" CTA.
  */
 import { useEffect, useState } from 'react'
-import { listTemplates, saveTemplate, deleteTemplate, newTemplateId } from '~/lib/journalDb'
+import { deleteTemplate, listTemplates, newTemplateId, saveTemplate } from '~/lib/journalDb'
 import type { Template } from '~/lib/types'
 import { JOURNAL_TYPES } from '~/lib/types'
 
-interface Props { uid: string }
+interface Props {
+  uid: string
+}
 
 export default function TemplatesView({ uid }: Props) {
   const [tpls, setTpls] = useState<Template[]>([])
   const [creating, setCreating] = useState(false)
   const [draft, setDraft] = useState<Partial<Template>>({})
   const reload = async () => setTpls(await listTemplates(uid))
-  useEffect(() => { reload() }, [uid]) // eslint-disable-line
+  useEffect(() => {
+    reload()
+  }, [uid]) // eslint-disable-line
 
   const create = async () => {
     if (!draft.name || !draft.structure) return
@@ -29,30 +33,80 @@ export default function TemplatesView({ uid }: Props) {
       updatedAt: Date.now(),
     }
     await saveTemplate(uid, t)
-    setCreating(false); setDraft({}); reload()
+    setCreating(false)
+    setDraft({})
+    reload()
   }
 
   return (
     <div className="tv">
       <div className="tv-bar">
-        <p className="tv-lede">Pick a template or define your own. The slug is reused as the URL parameter on <code>/entries/new</code>.</p>
-        <button type="button" className="tv-cta" onClick={() => setCreating(true)}>+ Custom template</button>
+        <p className="tv-lede">
+          Pick a template or define your own. The slug is reused as the URL parameter on{' '}
+          <code>/entries/new</code>.
+        </p>
+        <button type="button" className="tv-cta" onClick={() => setCreating(true)}>
+          + Custom template
+        </button>
       </div>
 
       {creating && (
         <div className="tv-card tv-form">
-          <input placeholder="Template name" value={draft.name || ''} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
-          <textarea placeholder="Description (optional)" value={draft.description || ''} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
-          <textarea placeholder="Markdown skeleton (use # H1, ## H2, - lists, etc.)" rows={8} value={draft.structure || ''} onChange={(e) => setDraft({ ...draft, structure: e.target.value })} />
+          <input
+            placeholder="Template name"
+            value={draft.name || ''}
+            onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+          />
+          <textarea
+            placeholder="Description (optional)"
+            value={draft.description || ''}
+            onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+          />
+          <textarea
+            placeholder="Markdown skeleton (use # H1, ## H2, - lists, etc.)"
+            rows={8}
+            value={draft.structure || ''}
+            onChange={(e) => setDraft({ ...draft, structure: e.target.value })}
+          />
           <div className="tv-form-row">
-            <select value={draft.defaultJournalType || 'custom'} onChange={(e) => setDraft({ ...draft, defaultJournalType: e.target.value as Template['defaultJournalType'] })}>
-              {JOURNAL_TYPES.map((t) => <option key={t.id} value={t.id}>{t.emoji} {t.label}</option>)}
+            <select
+              value={draft.defaultJournalType || 'custom'}
+              onChange={(e) =>
+                setDraft({
+                  ...draft,
+                  defaultJournalType: e.target.value as Template['defaultJournalType'],
+                })
+              }
+            >
+              {JOURNAL_TYPES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.emoji} {t.label}
+                </option>
+              ))}
             </select>
-            <label className="tv-toggle"><input type="checkbox" checked={!!draft.defaultMoodRequired} onChange={(e) => setDraft({ ...draft, defaultMoodRequired: e.target.checked })} /> Mood required</label>
+            <label className="tv-toggle">
+              <input
+                type="checkbox"
+                checked={!!draft.defaultMoodRequired}
+                onChange={(e) => setDraft({ ...draft, defaultMoodRequired: e.target.checked })}
+              />{' '}
+              Mood required
+            </label>
           </div>
           <div className="tv-form-actions">
-            <button type="button" onClick={create} className="tv-save">Save template</button>
-            <button type="button" onClick={() => { setCreating(false); setDraft({}) }} className="tv-cancel">Cancel</button>
+            <button type="button" onClick={create} className="tv-save">
+              Save template
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCreating(false)
+                setDraft({})
+              }}
+              className="tv-cancel"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
@@ -65,11 +119,25 @@ export default function TemplatesView({ uid }: Props) {
               {t.isBuiltIn && <span className="tv-badge">built-in</span>}
             </div>
             <p className="tv-desc">{t.description}</p>
-            <pre className="tv-preview">{t.structure.slice(0, 220)}{t.structure.length > 220 ? '…' : ''}</pre>
+            <pre className="tv-preview">
+              {t.structure.slice(0, 220)}
+              {t.structure.length > 220 ? '…' : ''}
+            </pre>
             <div className="tv-actions">
-              <a className="tv-use" href={`/entries/new?template=${encodeURIComponent(t.id)}`}>Use →</a>
+              <a className="tv-use" href={`/entries/new?template=${encodeURIComponent(t.id)}`}>
+                Use →
+              </a>
               {!t.isBuiltIn && (
-                <button type="button" className="tv-del" onClick={async () => { await deleteTemplate(uid, t.id); reload() }}>Delete</button>
+                <button
+                  type="button"
+                  className="tv-del"
+                  onClick={async () => {
+                    await deleteTemplate(uid, t.id)
+                    reload()
+                  }}
+                >
+                  Delete
+                </button>
               )}
             </div>
           </div>

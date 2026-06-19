@@ -5,22 +5,22 @@
  * Astro pages render these as <Wrapper client:only="react" />.
  */
 import type { ReactNode } from 'react'
+import type { JournalType } from '~/lib/types'
 import AuthGate from './AuthGate'
-import DashboardView from './DashboardView'
-import EntryEditor from './EntryEditor'
-import EntryReadView from './EntryReadView'
-import EntryList from './EntryList'
 import CalendarView from './CalendarView'
+import DashboardView from './DashboardView'
+import DeleteAccountView from './DeleteAccountView'
+import EntryEditor from './EntryEditor'
+import EntryList from './EntryList'
+import EntryReadView from './EntryReadView'
+import GoalsView from './GoalsView'
+import ImportExportView from './ImportExportView'
 import MemoriesView from './MemoriesView'
 import SearchView from './SearchView'
-import StatsView from './StatsView'
-import GoalsView from './GoalsView'
-import TemplatesView from './TemplatesView'
-import TagsView from './TagsView'
 import SettingsView from './SettingsView'
-import ImportExportView from './ImportExportView'
-import DeleteAccountView from './DeleteAccountView'
-import type { JournalType } from '~/lib/types'
+import StatsView from './StatsView'
+import TagsView from './TagsView'
+import TemplatesView from './TemplatesView'
 
 // ---- Generic factory ----
 type Render = (uid: string, isAnonymous: boolean) => ReactNode
@@ -32,7 +32,9 @@ function withGate(render: Render) {
 }
 
 // ---- Per-page wrappers ----
-export const DashboardPage = withGate((uid, isAnonymous) => <DashboardView uid={uid} isAnonymous={isAnonymous} />)
+export const DashboardPage = withGate((uid, isAnonymous) => (
+  <DashboardView uid={uid} isAnonymous={isAnonymous} />
+))
 
 export function NewEntryPage() {
   return (
@@ -41,7 +43,9 @@ export function NewEntryPage() {
         const url = new URL(window.location.href)
         const templateId = url.searchParams.get('template') ?? undefined
         const dt = url.searchParams.get('type') ?? undefined
-        return <EntryEditor uid={uid} templateId={templateId} defaultJournalType={dt as JournalType} />
+        return (
+          <EntryEditor uid={uid} templateId={templateId} defaultJournalType={dt as JournalType} />
+        )
       }}
     </AuthGate>
   )
@@ -72,8 +76,16 @@ export function ReadEntryPage() {
 }
 
 export const EntriesPage = withGate((uid) => <EntryList uid={uid} showFilters />)
-export const FavoritesPage = withGate((uid) => <EntryList uid={uid} filter={{ favorite: true }} emptyHint="You haven't favorited any entries yet." />)
-export const PinnedPage = withGate((uid) => <EntryList uid={uid} filter={{ pinned: true }} emptyHint="You haven't pinned any entries yet." />)
+export const FavoritesPage = withGate((uid) => (
+  <EntryList
+    uid={uid}
+    filter={{ favorite: true }}
+    emptyHint="You haven't favorited any entries yet."
+  />
+))
+export const PinnedPage = withGate((uid) => (
+  <EntryList uid={uid} filter={{ pinned: true }} emptyHint="You haven't pinned any entries yet." />
+))
 
 export function TagPage() {
   return (

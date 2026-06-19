@@ -2,10 +2,12 @@
  * GoalsView — list + create journal goals (write-daily-30, gratitude-10, etc).
  */
 import { useEffect, useMemo, useState } from 'react'
-import { listGoals, saveGoal, deleteGoal, listEntries, newGoalId } from '~/lib/journalDb'
+import { deleteGoal, listEntries, listGoals, newGoalId, saveGoal } from '~/lib/journalDb'
 import type { Entry, Goal } from '~/lib/types'
 
-interface Props { uid: string }
+interface Props {
+  uid: string
+}
 
 export default function GoalsView({ uid }: Props) {
   const [goals, setGoals] = useState<Goal[]>([])
@@ -15,7 +17,10 @@ export default function GoalsView({ uid }: Props) {
 
   const reload = async () => setGoals(await listGoals(uid))
 
-  useEffect(() => { reload(); listEntries(uid, { limit: 1000 }).then(setEntries) }, [uid]) // eslint-disable-line
+  useEffect(() => {
+    reload()
+    listEntries(uid, { limit: 1000 }).then(setEntries)
+  }, [uid]) // eslint-disable-line
 
   const computed = useMemo(() => {
     return goals.map((g) => {
@@ -30,7 +35,8 @@ export default function GoalsView({ uid }: Props) {
       else if (g.type === 'words') progress = inRange.reduce((s, e) => s + (e.wordCount || 0), 0)
       else if (g.type === 'streak') {
         const dates = new Set(inRange.map((e) => e.entryDate))
-        let run = 0; let best = 0
+        let run = 0
+        let best = 0
         const cursor = new Date(g.startDate)
         while (cursor.getTime() <= end) {
           if (dates.has(cursor.toISOString().slice(0, 10))) run += 1
@@ -61,26 +67,50 @@ export default function GoalsView({ uid }: Props) {
       updatedAt: Date.now(),
     }
     await saveGoal(uid, g)
-    setCreating(false); setDraft({}); await reload()
+    setCreating(false)
+    setDraft({})
+    await reload()
   }
 
   return (
     <div className="gv">
       <div className="gv-bar">
-        <button type="button" className="gv-cta" onClick={() => setCreating(true)}>+ New goal</button>
+        <button type="button" className="gv-cta" onClick={() => setCreating(true)}>
+          + New goal
+        </button>
       </div>
       {creating && (
         <div className="gv-card gv-form">
-          <input placeholder="Title (e.g. Write daily for 30 days)" value={draft.title || ''} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
-          <textarea placeholder="Description (optional)" value={draft.description || ''} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+          <input
+            placeholder="Title (e.g. Write daily for 30 days)"
+            value={draft.title || ''}
+            onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+          />
+          <textarea
+            placeholder="Description (optional)"
+            value={draft.description || ''}
+            onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+          />
           <div className="gv-form-row">
-            <select value={draft.type || 'count'} onChange={(e) => setDraft({ ...draft, type: e.target.value as Goal['type'] })}>
+            <select
+              value={draft.type || 'count'}
+              onChange={(e) => setDraft({ ...draft, type: e.target.value as Goal['type'] })}
+            >
               <option value="count">Entry count</option>
               <option value="streak">Streak</option>
               <option value="words">Words written</option>
             </select>
-            <input type="number" min={1} placeholder="Target" value={draft.target || ''} onChange={(e) => setDraft({ ...draft, target: Number(e.target.value) })} />
-            <select value={draft.period || 'month'} onChange={(e) => setDraft({ ...draft, period: e.target.value as Goal['period'] })}>
+            <input
+              type="number"
+              min={1}
+              placeholder="Target"
+              value={draft.target || ''}
+              onChange={(e) => setDraft({ ...draft, target: Number(e.target.value) })}
+            />
+            <select
+              value={draft.period || 'month'}
+              onChange={(e) => setDraft({ ...draft, period: e.target.value as Goal['period'] })}
+            >
               <option value="week">This week</option>
               <option value="month">This month</option>
               <option value="year">This year</option>
@@ -88,12 +118,31 @@ export default function GoalsView({ uid }: Props) {
             </select>
           </div>
           <div className="gv-form-row">
-            <input type="date" value={draft.startDate || ''} onChange={(e) => setDraft({ ...draft, startDate: e.target.value })} />
-            <input type="date" value={draft.endDate || ''} onChange={(e) => setDraft({ ...draft, endDate: e.target.value })} />
+            <input
+              type="date"
+              value={draft.startDate || ''}
+              onChange={(e) => setDraft({ ...draft, startDate: e.target.value })}
+            />
+            <input
+              type="date"
+              value={draft.endDate || ''}
+              onChange={(e) => setDraft({ ...draft, endDate: e.target.value })}
+            />
           </div>
           <div className="gv-form-actions">
-            <button type="button" onClick={create} className="gv-save">Save goal</button>
-            <button type="button" onClick={() => { setCreating(false); setDraft({}) }} className="gv-cancel">Cancel</button>
+            <button type="button" onClick={create} className="gv-save">
+              Save goal
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCreating(false)
+                setDraft({})
+              }}
+              className="gv-cancel"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
@@ -106,14 +155,32 @@ export default function GoalsView({ uid }: Props) {
           <div key={g.id} className="gv-card">
             <div className="gv-head">
               <strong>{g.title}</strong>
-              <button type="button" className="gv-del" onClick={async () => { await deleteGoal(uid, g.id); await reload() }} aria-label="Delete goal">×</button>
+              <button
+                type="button"
+                className="gv-del"
+                onClick={async () => {
+                  await deleteGoal(uid, g.id)
+                  await reload()
+                }}
+                aria-label="Delete goal"
+              >
+                ×
+              </button>
             </div>
             {g.description && <p className="gv-desc">{g.description}</p>}
-            <div className="gv-progress"><div className="gv-progress-bar" style={{ width: `${pct}%` }} /></div>
+            <div className="gv-progress">
+              <div className="gv-progress-bar" style={{ width: `${pct}%` }} />
+            </div>
             <div className="gv-meta">
-              <span>{g.progress} / {g.target} {g.type === 'words' ? 'words' : g.type === 'streak' ? 'days streak' : 'entries'}</span>
+              <span>
+                {g.progress} / {g.target}{' '}
+                {g.type === 'words' ? 'words' : g.type === 'streak' ? 'days streak' : 'entries'}
+              </span>
               <span>{g.period}</span>
-              <span>{g.startDate}{g.endDate ? ` → ${g.endDate}` : ''}</span>
+              <span>
+                {g.startDate}
+                {g.endDate ? ` → ${g.endDate}` : ''}
+              </span>
             </div>
           </div>
         )

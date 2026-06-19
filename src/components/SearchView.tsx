@@ -2,14 +2,18 @@
  * SearchView — Fuse.js full-text over the user's entries with mood/tag/date filters.
  * Mounted at /search. Also opened by ⌘K from anywhere via SearchOverlay.
  */
-import { useEffect, useMemo, useState } from 'react'
+
 import Fuse from 'fuse.js'
+import { useEffect, useMemo, useState } from 'react'
 import { listEntries } from '~/lib/journalDb'
-import EntryCard from './EntryCard'
 import type { Entry, Mood } from '~/lib/types'
 import { MOODS } from '~/lib/types'
+import EntryCard from './EntryCard'
 
-interface Props { uid: string; initialQuery?: string }
+interface Props {
+  uid: string
+  initialQuery?: string
+}
 
 export default function SearchView({ uid, initialQuery = '' }: Props) {
   const [entries, setEntries] = useState<Entry[]>([])
@@ -19,14 +23,20 @@ export default function SearchView({ uid, initialQuery = '' }: Props) {
   const [to, setTo] = useState('')
   const [tag, setTag] = useState('')
 
-  useEffect(() => { listEntries(uid, { limit: 1000 }).then(setEntries) }, [uid])
+  useEffect(() => {
+    listEntries(uid, { limit: 1000 }).then(setEntries)
+  }, [uid])
 
-  const fuse = useMemo(() => new Fuse(entries, {
-    keys: ['title', 'body', 'tags'],
-    includeScore: true,
-    threshold: 0.4,
-    ignoreLocation: true,
-  }), [entries])
+  const fuse = useMemo(
+    () =>
+      new Fuse(entries, {
+        keys: ['title', 'body', 'tags'],
+        includeScore: true,
+        threshold: 0.4,
+        ignoreLocation: true,
+      }),
+    [entries],
+  )
 
   const results = useMemo(() => {
     let pool: Entry[] = q.trim() ? fuse.search(q.trim()).map((r) => r.item) : entries
@@ -40,22 +50,43 @@ export default function SearchView({ uid, initialQuery = '' }: Props) {
   return (
     <div className="sv">
       <input
-        autoFocus type="search" value={q}
+        autoFocus
+        type="search"
+        value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Search your journal…" className="sv-q"
+        placeholder="Search your journal…"
+        className="sv-q"
       />
       <div className="sv-filters">
         <select value={mood} onChange={(e) => setMood(e.target.value as Mood | '')}>
           <option value="">Any mood</option>
-          {MOODS.map((m) => <option key={m.id} value={m.id}>{m.emoji} {m.label}</option>)}
+          {MOODS.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.emoji} {m.label}
+            </option>
+          ))}
         </select>
-        <input type="text" placeholder="#tag" value={tag} onChange={(e) => setTag(e.target.value)} />
-        <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="From" />
+        <input
+          type="text"
+          placeholder="#tag"
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+        />
+        <input
+          type="date"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          aria-label="From"
+        />
         <input type="date" value={to} onChange={(e) => setTo(e.target.value)} aria-label="To" />
-        <span className="sv-count">{results.length} result{results.length === 1 ? '' : 's'}</span>
+        <span className="sv-count">
+          {results.length} result{results.length === 1 ? '' : 's'}
+        </span>
       </div>
       <div className="sv-grid">
-        {results.map((e) => <EntryCard key={e.id} entry={e} />)}
+        {results.map((e) => (
+          <EntryCard key={e.id} entry={e} />
+        ))}
       </div>
       <style>{`
         .sv { display: flex; flex-direction: column; gap: 0.75rem; }

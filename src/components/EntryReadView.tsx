@@ -1,13 +1,28 @@
 /**
- * EntryReadView — read-only display of an entry, with Edit + Delete + Markdown export.
+ * EntryReadView — v2.
+ *
+ * Read-only display on the same cream-page-on-dusk geometry as the editor.
+ * Date heading in GT Sectra. Body in iA Writer Quattro at the 66ch hard cap.
+ * Sealed-margin fingerprint top-right of the page surface.
+ *
+ * Three actions, in graphite chrome at the bottom of the column: edit,
+ * export .md, delete.
+ *
+ * NO mood pill. NO journal-type badge. NO weather chip. NO favorite/pinned
+ * icons. NO tag pills. The brief cuts the "metadata strip" — entries here
+ * are sentences, not records.
  */
 import { useEffect, useState } from 'react'
-import { getEntry, deleteEntry } from '~/lib/journalDb'
+import { fingerprintSync } from '~/lib/fingerprint'
+import { deleteEntry, getEntry } from '~/lib/journalDb'
 import { mdToHtml } from '~/lib/markdown'
 import type { Entry } from '~/lib/types'
-import { MOODS, JOURNAL_TYPES } from '~/lib/types'
+import { setSeal } from './Seal'
 
-interface Props { uid: string; entryId: string }
+interface Props {
+  uid: string
+  entryId: string
+}
 
 export default function EntryReadView({ uid, entryId }: Props) {
   const [entry, setEntry] = useState<Entry | null>(null)
@@ -22,84 +37,194 @@ export default function EntryReadView({ uid, entryId }: Props) {
     })
   }, [uid, entryId])
 
-  if (loading) return <p style={{ padding: '2rem', color: 'var(--color-fg-muted)' }}>Loading…</p>
-  if (missing || !entry) return (
-    <div style={{ padding: '2rem' }}>
-      <p>Entry not found.</p>
-      <a href="/entries">← Back to entries</a>
-    </div>
-  )
+  // The seal is sealed when reading.
+  useEffect(() => {
+    setSeal('sealed')
+    return () => setSeal('closing')
+  }, [])
 
-  const m = entry.mood ? MOODS.find((x) => x.id === entry.mood) : null
-  const t = JOURNAL_TYPES.find((x) => x.id === entry.journalType)
+  if (loading) return <div className="er-loading chrome">Loading…</div>
+  if (missing || !entry)
+    return (
+      <div className="er-missing">
+        <p>Entry not found.</p>
+        <p>
+          <a href="/entries">&larr; back to entries</a>
+        </p>
+      </div>
+    )
 
   const exportMd = () => {
-    const md = `# ${entry.title || 'Untitled'}\n\n*${entry.entryDate} · ${t?.label}*\n\n${entry.body || ''}`
+    const md = `# ${entry.title || 'Untitled'}\n\n*${entry.entryDate}*\n\n${entry.body || ''}`
     const blob = new Blob([md], { type: 'text/markdown' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `${entry.entryDate}-${(entry.title || 'entry').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}.md`
+    a.download = `${entry.entryDate}-${(entry.title || 'entry')
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')}.md`
     a.click()
     URL.revokeObjectURL(a.href)
   }
 
+  const fp = fingerprintSync(entry.body || entry.title || entry.id)
+  const dateLong = new Date(entry.entryDate + 'T00:00:00').toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
+
   return (
-    <article className="er">
-      <header className="er-head">
-        <p className="er-meta">
-          <span>{t?.emoji} {t?.label}</span>
-          <time>{entry.entryDate}</time>
-          {m && <span style={{ color: m.color }}>{m.emoji} {m.label}{entry.moodIntensity ? ` (${entry.moodIntensity}/10)` : ''}</span>}
-          {entry.weather && <span>{entry.weather.temp}° {entry.weather.condition}</span>}
-          {entry.favorite && <span>❤️</span>}
-          {entry.pinned && <span>📌</span>}
-        </p>
-        <h1 className="er-title">{entry.title || 'Untitled entry'}</h1>
-        <div className="er-tags">{entry.tags?.map((tag) => <a key={tag} href={`/tags/${encodeURIComponent(tag)}`}>#{tag}</a>)}</div>
-        <div className="er-actions">
-          <a href={`/entries/${entry.id}/edit`} className="er-btn er-btn-primary">Edit</a>
-          <button type="button" onClick={exportMd} className="er-btn">Export .md</button>
+    <div className="er">
+      <div className="ee-chrome">
+        <div className="spine ee-chrome-row">
+          <a href="/dashboard" className="er-back chrome">
+            &larr; dashboard
+          </a>
+          <span className="er-chrome-spacer" aria-hidden="true"></span>
+          <a href={`/entries/${entry.id}/edit`} className="er-edit chrome">
+            edit
+          </a>
+        </div>
+      </div>
+
+      <article className="er-page page-cream">
+        <header className="er-head">
+          <h1 className="er-date-display">{dateLong}</h1>
+          {entry.title && <p className="er-title">{entry.title}</p>}
+          <span className="er-fp tabular" data-oriz-fingerprint aria-hidden="true">
+            {fp}
+          </span>
+        </header>
+
+        <div
+          className="entry-body er-body"
+          dangerouslySetInnerHTML={{ __html: entry.bodyHtml || mdToHtml(entry.body || '') }}
+        />
+
+        <footer className="er-foot">
+          <a href={`/entries/${entry.id}/edit`}>edit</a>
+          <span aria-hidden="true">·</span>
+          <button type="button" onClick={exportMd}>
+            export .md
+          </button>
+          <span aria-hidden="true">·</span>
           <button
             type="button"
-            className="er-btn er-btn-danger"
+            className="er-foot-danger"
             onClick={async () => {
               if (window.confirm('Delete this entry permanently?')) {
                 await deleteEntry(uid, entry.id)
                 window.location.href = '/entries'
               }
             }}
-          >Delete</button>
-        </div>
-      </header>
-
-      <div
-        className="er-body"
-        // entry.bodyHtml is generated client-side from MD via TipTap or marked;
-        // we sanitize by always rendering through mdToHtml when bodyHtml is empty.
-        dangerouslySetInnerHTML={{ __html: entry.bodyHtml || mdToHtml(entry.body || '') }}
-      />
+          >
+            delete
+          </button>
+        </footer>
+      </article>
 
       <style>{`
-        .er { display: flex; flex-direction: column; gap: 1.25rem; padding-block: 1.25rem; }
-        .er-head { display: flex; flex-direction: column; gap: 0.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
-        .er-meta { display: flex; flex-wrap: wrap; gap: 0.875rem; color: var(--color-fg-muted); font-size: 0.8125rem; margin: 0; }
-        .er-title { font-family: var(--font-serif); font-size: clamp(1.625rem, 4vw, 2.5rem); font-weight: 600; letter-spacing: -0.01em; margin: 0; }
-        .er-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
-        .er-tags a { padding: 0.125rem 0.5rem; background: var(--color-bg-muted); border-radius: 9999px; color: var(--color-fg-muted); text-decoration: none; font-size: 0.75rem; }
-        .er-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
-        .er-btn { display: inline-flex; align-items: center; height: 36px; padding-inline: 0.875rem; background: var(--color-bg-soft); border: 1px solid var(--color-border); border-radius: var(--radius-button); color: var(--color-fg); text-decoration: none; font-size: 0.8125rem; cursor: pointer; }
-        .er-btn-primary { background: var(--color-accent); color: var(--color-accent-fg); border-color: var(--color-accent); }
-        .er-btn-danger { color: #ef4444; border-color: #ef4444; }
-        .er-body { font-family: var(--font-serif); font-size: 1.0625rem; line-height: 1.75; color: var(--color-fg); }
-        .er-body h1, .er-body h2, .er-body h3 { font-family: var(--font-serif); font-weight: 600; margin: 1.25rem 0 0.5rem; }
-        .er-body h1 { font-size: 1.5rem; } .er-body h2 { font-size: 1.25rem; } .er-body h3 { font-size: 1.0625rem; }
-        .er-body p { margin: 0 0 0.875rem; }
-        .er-body ul, .er-body ol { padding-left: 1.5rem; margin: 0 0 0.875rem; }
-        .er-body img { max-width: 100%; border-radius: var(--radius-button); margin: 0.5rem 0; }
-        .er-body blockquote { border-left: 3px solid var(--color-accent); padding-left: 1rem; margin: 0 0 0.875rem; color: var(--color-fg-muted); font-style: italic; }
-        .er-body code { background: var(--color-bg-muted); padding: 0.125em 0.375em; border-radius: 0.25rem; font-family: var(--font-mono); font-size: 0.875em; }
-        .er-body pre { background: var(--color-bg-muted); padding: 1rem; border-radius: var(--radius-button); overflow-x: auto; }
+        .er { background: var(--dusk); min-height: 100vh; }
+        .er-loading {
+          padding: 4rem 2rem;
+          text-align: center;
+        }
+        .er-missing {
+          padding: 4rem 2rem;
+          text-align: center;
+          color: var(--graphite);
+          font-family: var(--font-sans);
+        }
+
+        .ee-chrome { padding: 16px 0 0; }
+        .ee-chrome-row {
+          display: flex;
+          align-items: center;
+          height: 32px;
+        }
+        .er-back, .er-edit {
+          font-family: var(--font-sans);
+          font-size: 13px;
+          color: var(--graphite);
+          text-decoration: none;
+        }
+        .er-back:hover, .er-edit:hover { color: var(--seal-red); }
+        .er-chrome-spacer { flex: 1; }
+
+        .er-page {
+          margin: 24px auto 0;
+          max-width: 720px;
+          padding: clamp(2rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem);
+          color: var(--ink, #1a1a22);
+        }
+        .er-head {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          column-gap: 1rem;
+          align-items: baseline;
+          margin-bottom: 1.75rem;
+        }
+        .er-date-display {
+          grid-column: 1;
+          font-family: var(--font-display);
+          font-size: clamp(1.5rem, 4vw, 2rem);
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          line-height: 1.1;
+          margin: 0;
+        }
+        .er-title {
+          grid-column: 1;
+          margin: 0.25rem 0 0;
+          font-family: var(--font-display);
+          font-size: 1.125rem;
+          font-style: italic;
+          color: var(--graphite);
+        }
+        .er-fp {
+          grid-column: 2;
+          grid-row: 1 / span 2;
+          align-self: start;
+          font-family: var(--font-sans);
+          font-size: 11px;
+          color: var(--graphite);
+          letter-spacing: 0.04em;
+          margin-top: 6px;
+        }
+
+        .er-body {
+          color: var(--ink, #1a1a22);
+        }
+
+        .er-foot {
+          margin-top: 3rem;
+          padding-top: 1rem;
+          border-top: 1px solid color-mix(in oklab, var(--ink, #1a1a22) 12%, transparent);
+          display: flex;
+          gap: 0.75rem;
+          font-family: var(--font-sans);
+          font-size: 13px;
+          color: var(--graphite);
+        }
+        .er-foot a, .er-foot button {
+          background: transparent;
+          border: 0;
+          padding: 0;
+          color: var(--graphite);
+          font: inherit;
+          cursor: pointer;
+          text-decoration: underline;
+          text-decoration-color: var(--graphite);
+          text-underline-offset: 3px;
+        }
+        .er-foot a:hover, .er-foot button:hover {
+          color: var(--seal-red);
+          text-decoration-color: var(--seal-red);
+        }
+        .er-foot-danger:hover { color: var(--seal-red); }
       `}</style>
-    </article>
+    </div>
   )
 }

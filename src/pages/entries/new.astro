@@ -1,7 +1,19 @@
 ---
-import AppPage from '~/layouts/AppPage.astro'
 import { NewEntryPage } from '~/components/AppPages'
+/*
+ * The editor surface — full-bleed cream page on dusk frame. The AppPage
+ * shell is bypassed: BaseLayout is invoked directly with hideHeader so the
+ * editor's own thin chrome can fade per the v2 brief. Initial seal state is
+ * 'typing' since a new entry has unsaved local edits the moment it loads.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
-<AppPage title="New entry — Journal" heading="New entry">
+<BaseLayout
+  title="new entry — oriz-journal"
+  noindex={true}
+  hideHeader={true}
+  hideFooter={true}
+  initialSealState="typing"
+>
   <NewEntryPage client:only="react" />
-</AppPage>
+</BaseLayout>

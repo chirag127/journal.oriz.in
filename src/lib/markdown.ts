@@ -9,7 +9,12 @@ import TurndownService from 'turndown'
 
 let _td: TurndownService | null = null
 function td() {
-  if (!_td) _td = new TurndownService({ headingStyle: 'atx', bulletListMarker: '-', codeBlockStyle: 'fenced' })
+  if (!_td)
+    _td = new TurndownService({
+      headingStyle: 'atx',
+      bulletListMarker: '-',
+      codeBlockStyle: 'fenced',
+    })
   return _td
 }
 

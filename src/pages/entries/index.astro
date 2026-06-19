@@ -1,7 +1,21 @@
 ---
-import AppPage from '~/layouts/AppPage.astro'
 import { EntriesPage } from '~/components/AppPages'
+import AppPage from '~/layouts/AppPage.astro'
 ---
-<AppPage title="Entries — Journal" heading="Entries" lede="Every entry, newest first. Filter by mood or journal type.">
+<AppPage title="entries — oriz-journal">
+  <h1 class="route-h">Entries</h1>
   <EntriesPage client:only="react" />
+  <style>
+    .route-h {
+      font-family: var(--font-display);
+      font-size: clamp(1.625rem, 4vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 0 0 1.25rem;
+      color: var(--page-cream);
+    }
+    @media (prefers-color-scheme: light) {
+      .route-h { color: var(--ink, #1a1a22); }
+    }
+  </style>
 </AppPage>

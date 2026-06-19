@@ -1,9 +1,10 @@
 // @ts-check
-import { defineConfig } from 'astro/config'
+
+import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
-import mdx from '@astrojs/mdx'
 import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'astro/config'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
@@ -26,14 +27,24 @@ export default defineConfig({
           start_url: '/dashboard',
           scope: '/',
           display: 'standalone',
-          background_color: '#0b0b0d',
-          theme_color: '#0b0b0d',
+          background_color: '#0B0B10',
+          theme_color: '#0B0B10',
           orientation: 'portrait-primary',
           icons: [
             { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
             { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-            { src: '/icons/icon-maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-            { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+            {
+              src: '/icons/icon-maskable-192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'maskable',
+            },
+            {
+              src: '/icons/icon-maskable-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
+            },
           ],
           shortcuts: [
             { name: 'New entry', url: '/entries/new', short_name: 'New' },

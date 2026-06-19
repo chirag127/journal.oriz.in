@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react'
 import { listTags } from '~/lib/journalDb'
 import type { Tag } from '~/lib/types'
 
-interface Props { uid: string }
+interface Props {
+  uid: string
+}
 
 export default function TagsView({ uid }: Props) {
   const [tags, setTags] = useState<Tag[]>([])
@@ -19,11 +21,12 @@ export default function TagsView({ uid }: Props) {
   }, [uid])
 
   if (loading) return <p style={{ padding: '2rem', color: 'var(--color-fg-muted)' }}>Loading…</p>
-  if (tags.length === 0) return (
-    <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-fg-muted)' }}>
-      No tags yet. Tags accumulate as you write entries.
-    </p>
-  )
+  if (tags.length === 0)
+    return (
+      <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-fg-muted)' }}>
+        No tags yet. Tags accumulate as you write entries.
+      </p>
+    )
 
   return (
     <div className="tg">

@@ -1,11 +1,11 @@
 ---
-/**
- * Read-view shell. Firebase Hosting rewrites /entries/{id} to this file at /entries/view.
- * The React island reads window.location.pathname for the id.
- */
-import AppPage from '~/layouts/AppPage.astro'
 import { ReadEntryPage } from '~/components/AppPages'
+/*
+ * Read-view shell. Firebase Hosting rewrites /entries/{id} to /entries/view.
+ * Cream page on dusk frame, no shell heading, no sidebar.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
-<AppPage title="Entry — Journal" heading="">
+<BaseLayout title="entry — oriz-journal" noindex={true} hideHeader={true} hideFooter={true}>
   <ReadEntryPage client:only="react" />
-</AppPage>
+</BaseLayout>

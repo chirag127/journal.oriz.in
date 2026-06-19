@@ -1,33 +1,43 @@
 ---
+import AccountPanel from '~/components/AccountPanel'
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { AccountPanel } from '@chirag127/oriz-ui'
 import { SITE_CONFIG } from '~/lib/siteConfig'
 ---
 
 <BaseLayout
-  title={`Account — ${SITE_CONFIG.name}`}
-  description="Sign in to Journal. One account works across every oriz site."
+  title={`account — ${SITE_CONFIG.name}`}
+  description="Sign in to oriz-journal. One account works across every oriz site."
   noindex={true}
-  showSidebar={false}
 >
-  <header class="container-prose page-head">
-    <p class="eyebrow"><a href="/">{SITE_CONFIG.name}</a> / Account</p>
+  <section class="spine prose-page">
+    <p class="eyebrow chrome"><a href="/">oriz-journal</a> / account</p>
     <h1>Account</h1>
     <p class="lede">
-      One sign-in works across every oriz site. Your journal entries stay tied
-      to your account and follow you anywhere.
+      One sign-in works across every oriz site. Your journal entries stay
+      tied to your account and follow you anywhere.
     </p>
-  </header>
 
-  <section class="container-prose">
-    <AccountPanel client:load />
+    <AccountPanel client:load siteName="oriz-journal" />
   </section>
 </BaseLayout>
 
 <style>
-  .page-head { padding-block: 3rem 1.5rem; border-bottom: 1px solid var(--color-border); }
-  .eyebrow { color: var(--color-fg-muted); font-size: 0.8125rem; margin: 0 0 0.5rem; }
-  .eyebrow a { color: var(--color-fg-muted); text-decoration: none; }
-  h1 { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; letter-spacing: -0.02em; margin: 0; }
-  .lede { color: var(--color-fg-muted); margin: 0.75rem 0 0; font-size: 1.0625rem; max-width: 56ch; }
+  .prose-page { padding-block: 3rem 4rem; font-family: var(--font-body); }
+  .eyebrow {
+    color: var(--graphite);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    margin: 0 0 0.75rem;
+  }
+  .eyebrow a { color: var(--graphite); text-decoration: none; }
+  .eyebrow a:hover { color: var(--seal-red); }
+  h1 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin: 0 0 1rem; }
+  .lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--graphite);
+    max-width: 50ch;
+    margin: 0 0 1rem;
+  }
 </style>

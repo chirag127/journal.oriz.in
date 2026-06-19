@@ -27,7 +27,9 @@ export default function MoodPicker({ mood, intensity, onChange, required, compac
             style={mood === m.id ? { borderColor: m.color, background: `${m.color}22` } : undefined}
             title={m.label}
           >
-            <span className="mood-emoji" aria-hidden="true">{m.emoji}</span>
+            <span className="mood-emoji" aria-hidden="true">
+              {m.emoji}
+            </span>
             {!compact && <span className="mood-label">{m.label}</span>}
           </button>
         ))}
@@ -36,7 +38,9 @@ export default function MoodPicker({ mood, intensity, onChange, required, compac
         <label className="mood-intensity">
           <span className="mood-intensity-label">Intensity</span>
           <input
-            type="range" min={1} max={10}
+            type="range"
+            min={1}
+            max={10}
             value={intensity ?? 5}
             onChange={(e) => onChange(mood, Number(e.target.value))}
           />
