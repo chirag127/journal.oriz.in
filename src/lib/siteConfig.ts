@@ -1,4 +1,4 @@
-import type { OrizSiteConfig } from '@chirag127/oriz-ui'
+import type { OrizSiteConfig } from '@chirag127/astro-shell/types'
 
 export const SITE_CONFIG: OrizSiteConfig = {
   slug: 'journal',

@@ -1,21 +1,11 @@
 // @ts-check
-
-import mdx from '@astrojs/mdx'
-import react from '@astrojs/react'
-import sitemap from '@astrojs/sitemap'
-import tailwindcss from '@tailwindcss/vite'
-import { defineConfig } from 'astro/config'
+import { shell } from '@chirag127/astro-shell/shell'
 import { VitePWA } from 'vite-plugin-pwa'
 
-export default defineConfig({
+export default shell({
   site: 'https://journal.oriz.in',
-  output: 'static',
-  trailingSlash: 'ignore',
-  build: { format: 'directory' },
-  integrations: [react(), mdx(), sitemap()],
   vite: {
     plugins: [
-      tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'auto',
