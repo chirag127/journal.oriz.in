@@ -1,13 +1,3 @@
-/*
- * AccountPanel — local copy emitting the canonical `data-oriz-account-*`
- * selector hooks, painted by `src/styles/oriz-ui-overrides.css`.
- *
- * Copied verbatim from oriz-home so that oriz-ui's `<AccountPanel>`
- * styled export no longer ties this site to the package's CSS surface.
- * When the auth-ui package ships to npm, replace with:
- *   import { AccountPanel } from '@chirag127/auth-ui'
- *   export default function Wrapper(){ return <AccountPanel auth={auth} /> }
- */
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
