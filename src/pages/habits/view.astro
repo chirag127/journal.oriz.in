@@ -1,0 +1,13 @@
+---
+import HabitDetailView from '~/components/HabitDetailView'
+import AppPage from '~/layouts/AppPage.astro'
+/*
+ * Habit detail shell. Firebase Hosting rewrites /habits/{id} to /habits/view.
+ * (Astro static mode requires getStaticPaths() for `[id].astro`, but habit IDs
+ *  are user-private and not enumerable at build time — same trade-off as the
+ *  /entries/{id} route, see firebase.json rewrites.)
+ */
+---
+<AppPage title="habit — oriz-journal">
+  <HabitDetailView client:only="react" />
+</AppPage>

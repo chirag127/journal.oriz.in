@@ -22,6 +22,7 @@
       { "source": "/entries/*/edit", "destination": "/entries/edit.html" },
       { "source": "/tags/*", "destination": "/tags/view.html" },
       { "source": "/entries/*", "destination": "/entries/view.html" },
+      { "source": "/habits/*", "destination": "/habits/view.html" },
       { "source": "**", "destination": "/index.html" }
     ]
   },
