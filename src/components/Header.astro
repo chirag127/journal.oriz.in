@@ -1,0 +1,143 @@
+---
+/*
+ * Header — chrome version (dashboard / calendar / settings / about / etc.).
+ *
+ * 56px tall, --ink-black on dusk. The wordmark sits left, the hamburger
+ * nav-drawer right. ⌘K search is HIDDEN behind the keystroke (no visible
+ * search trigger). The seal sits top-right of the page (rendered by the
+ * Seal island, NOT this file — the seal floats above the header).
+ *
+ * The editor uses a different chrome — see `EditorHeader.astro`.
+ *
+ * NO sticky backdrop blur. NO glass. NO emoji. Just the wordmark, the
+ * drawer, hairline rules above + below. Drawer is a CSS-only `<details>`
+ * popover so there is no animation library and no transition.
+ */
+import Wordmark from '~/components/Wordmark.astro'
+import { FAMILY_SITES } from '~/lib/family'
+
+interface Props {
+  /** Hide the wordmark (used on the editor). */
+  hideWordmark?: boolean
+}
+
+const { hideWordmark = false } = Astro.props
+const path = Astro.url.pathname.replace(/\/$/, '') || '/'
+const sectionLinks = [
+  { href: '/dashboard', label: 'dashboard' },
+  { href: '/entries', label: 'entries' },
+  { href: '/calendar', label: 'calendar' },
+  { href: '/memories', label: 'memories' },
+  { href: '/tags', label: 'tags' },
+  { href: '/stats', label: 'stats' },
+  { href: '/goals', label: 'goals' },
+  { href: '/templates', label: 'templates' },
+  { href: '/settings', label: 'settings' },
+  { href: '/about', label: 'about' },
+]
+---
+
+<header class="header">
+  <hr class="hairline" />
+  <div class="spine header-row">
+    {!hideWordmark && (
+      <a href="/dashboard" class="brand-link" aria-label="oriz-journal — dashboard">
+        <Wordmark href={null} size={18} />
+      </a>
+    )}
+    <span class="header-spacer" aria-hidden="true"></span>
+    <details class="drawer">
+      <summary aria-label="Open menu">menu</summary>
+      <nav aria-label="Primary" class="drawer-nav">
+        <ul>
+          {sectionLinks.map((s) => (
+            <li>
+              <a href={s.href} class:list={[{ here: path === s.href }]}>{s.label}</a>
+            </li>
+          ))}
+          <li class="drawer-rule"><hr class="hairline" /></li>
+          {FAMILY_SITES
+            .filter((s) => s.slug !== 'journal')
+            .map((s) => (
+              <li><a href={s.url} class="drawer-family">{s.name.toLowerCase()}</a></li>
+            ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+  <hr class="hairline" />
+</header>
+
+<style>
+  .header {
+    background: var(--ink-black);
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    height: 54px; /* 54 + 2×1px hairline = 56 */
+    gap: 0.75rem;
+  }
+  .brand-link {
+    text-decoration: none;
+    line-height: 1;
+  }
+  .header-spacer { flex: 1; }
+  .drawer {
+    position: relative;
+    font-family: var(--font-sans);
+  }
+  .drawer summary {
+    list-style: none;
+    cursor: pointer;
+    color: var(--graphite);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.375rem;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--graphite);
+  }
+  .drawer summary::-webkit-details-marker { display: none; }
+  .drawer summary:hover { color: var(--page-cream); text-decoration-color: var(--seal-red); }
+  @media (prefers-color-scheme: light) {
+    .drawer summary:hover { color: var(--ink, #1a1a22); }
+  }
+  .drawer[open] summary { color: var(--page-cream); text-decoration-color: var(--seal-red); }
+  .drawer-nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 220px;
+    background: var(--ink-black);
+    border: 1px solid var(--rule);
+    padding: 0.625rem 0;
+    z-index: 50;
+  }
+  .drawer-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .drawer-nav a {
+    display: block;
+    padding: 0.4375rem 1rem;
+    color: var(--page-cream);
+    font-size: 14px;
+    text-decoration: none;
+  }
+  @media (prefers-color-scheme: light) {
+    .drawer-nav a { color: var(--ink, #1a1a22); }
+  }
+  .drawer-nav a:hover { color: var(--seal-red); }
+  .drawer-nav .here { color: var(--seal-red); }
+  .drawer-nav .drawer-family { color: var(--graphite); font-size: 13px; }
+  .drawer-nav .drawer-family:hover { color: var(--page-cream); }
+  @media (prefers-color-scheme: light) {
+    .drawer-nav .drawer-family:hover { color: var(--ink, #1a1a22); }
+  }
+  .drawer-rule { padding: 0.375rem 0; }
+</style>
